@@ -1,0 +1,14 @@
+{
+  "name": "AhmadRaza — Full-Stack Developer & Agentic Engineer",
+  "short_name": "AhmadRaza",
+  "description": "Portfolio of Ahmad Raza (MrReal): websites, AI tools, pixel workspaces and AhmadOS — the portfolio that boots like a desktop.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0d1424",
+  "theme_color": "#0d1424",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

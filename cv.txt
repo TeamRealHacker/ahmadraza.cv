@@ -1,0 +1,37 @@
+AHMAD RAZA — Agentic Engineer & Full-Stack Developer
+MrReal · Founder, Team RealHackers
+Faisalabad, Punjab, Pakistan · +92 344 8538542 · ahmadrazapoor00@gmail.com
+ahmadraza.cv · realhackers.pages.dev · linkedin.com/in/ahmadstack · github.com/arhxam
+
+SUMMARY
+Full-stack developer and creator at Team RealHackers building and shipping complete
+digital products — local AI desktop software, browser-based motion tracking tools,
+cozy workspaces, 4K visual edits. End-to-end: planning → UI/UX design → full-stack
+development → performance optimization → launch.
+
+EXPERIENCE
+Founder & Full-Stack Developer — Team RealHackers (realhackers.pages.dev) · Jan 2024 – Present
+• "Quiet Work for Loud Problems" — crafting calm software: typographic UI systems,
+  buttery realtime motion, AI assistants / search / automation woven in quietly, minimal identities.
+• Agentic engineering: AI agents, assistants, and automation shipped inside real products.
+• Build in the open with weekly previews — four projects a year, finished like they carry our name.
+
+SELECTED PROJECTS
+• NOOK (v0.1) — Tiny pixel universe & productivity OS for desktop — notes, graph,
+  Pomodoro, 12 arcade games & AI pet.
+• ZFound — Offline visual similarity search & automated batch inventory cataloging
+  desktop software (with Zeeno Soft).
+• CenterFace AI — Browser-based video editor with local AI motion tracking & face
+  locking — centerface.web.app.
+• free-ui — Free MIT UI template library — React 19, TypeScript, Tailwind 4, Vite.
+  Production-grade templates, full source.
+• AhmadOS — This portfolio as a bootable pixel desktop: ahmadraza.cv/os.
+
+EDUCATION
+Punjab Group of Colleges — Master of Computer Applications (AI)
+
+SKILLS
+Agentic Engineering: AI agents, assistants, automation, LLM-powered workflows
+Development: Full-stack development, TypeScript, JavaScript, Python, React 19, Next.js, Tailwind CSS, Tauri
+AI & Data: Artificial Intelligence (AI), LlamaIndex, search & retrieval systems
+Design & Media: UI/UX design, web design, 4K video editing, motion graphics

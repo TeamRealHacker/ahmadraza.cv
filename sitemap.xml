@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap for ahmadraza.cv
+  Single-page app using hash routes (#/work, #/about …) + AhmadOS at /os/.
+-->
+<urlset xmlns="http://www.w3.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ahmadraza.cv/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- case studies -->
+  <url>
+    <loc>https://ahmadraza.cv/os/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
