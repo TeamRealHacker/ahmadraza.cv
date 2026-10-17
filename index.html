@@ -57,63 +57,202 @@
     <meta name="geo.position" content="31.4504;73.1350" />
     <meta name="ICBM" content="31.4504, 73.1350" />
     <!-- ============ STRUCTURED DATA: PERSON + WEBSITE + WORK ============ -->
-    <script type="application/ld+json">
+    <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@graph": [
     {
-      "@context": "https://schema.org",
-      "@graph": [
+      "@type": "Person",
+      "@id": "https://ahmadraza.cv/#person",
+      "name": "Ahmad Raza",
+      "alternateName": [
+        "MrReal",
+        "AhmadRaza",
+        "arhxam"
+      ],
+      "url": "https://ahmadraza.cv/",
+      "image": "https://ahmadraza.cv/og.png",
+      "jobTitle": "Agentic Engineer & Full-Stack Developer",
+      "description": "Full-stack developer and creator at Team RealHackers building and shipping complete digital products end-to-end.",
+      "email": "mailto:ahmadrazapoor00@gmail.com",
+      "telephone": "+92-344-8538542",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Faisalabad",
+        "addressRegion": "Punjab",
+        "addressCountry": "PK"
+      },
+      "worksFor": {
+        "@id": "https://ahmadraza.cv/#team-realhackers"
+      },
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Punjab Group of Colleges",
+        "department": "Master of Computer Applications (AI)"
+      },
+      "knowsAbout": [
+        "Agentic Engineering",
+        "AI Agents",
+        "Full-Stack Development",
+        "React",
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "Tauri",
+        "LlamaIndex",
+        "Search & Retrieval Systems",
+        "UI/UX Design",
+        "Motion Graphics",
+        "4K Video Editing",
+        "Pixel Art"
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/ahmadstack/",
+        "https://github.com/MrRealORG",
+        "https://realhackers.pages.dev",
+        "https://centerface.web.app"
+      ],
+      "founderOf": {
+        "@id": "https://ahmadraza.cv/#team-realhackers"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://ahmadraza.cv/#website",
+      "url": "https://ahmadraza.cv/",
+      "name": "AhmadRaza \u2014 Blue Era Portfolio",
+      "description": "Portfolio of Ahmad Raza: work, about, stuff lab, contact and AhmadOS.",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://ahmadraza.cv/#person"
+      },
+      "hasPart": [
         {
-          "@type": "Person",
-          "@id": "https://ahmadraza.cv/#person",
-          "name": "Ahmad Raza",
-          "alternateName": ["MrReal", "AhmadRaza", "arhxam"],
-          "url": "https://ahmadraza.cv/",
-          "image": "https://ahmadraza.cv/og.png",
-          "jobTitle": "Agentic Engineer & Full-Stack Developer",
-          "description": "Full-stack developer and creator at Team RealHackers building and shipping complete digital products end-to-end.",
-          "email": "mailto:ahmadrazapoor00@gmail.com",
-          "telephone": "+92-344-8538542",
-          "address": { "@type": "PostalAddress", "addressLocality": "Faisalabad", "addressRegion": "Punjab", "addressCountry": "PK" },
-          "worksFor": { "@type": "Organization", "name": "Team RealHackers", "url": "https://realhackers.pages.dev" },
-          "alumniOf": { "@type": "CollegeOrUniversity", "name": "Punjab Group of Colleges", "department": "Master of Computer Applications (AI)" },
-          "knowsAbout": ["Agentic Engineering", "AI Agents", "Full-Stack Development", "React", "Next.js", "TypeScript", "Tailwind CSS", "Tauri", "LlamaIndex", "Search & Retrieval Systems", "UI/UX Design", "Motion Graphics", "4K Video Editing", "Pixel Art"],
-          "sameAs": [
-            "https://www.linkedin.com/in/ahmadstack/",
-            "https://github.com/MrRealORG",
-            "https://realhackers.pages.dev",
-            "https://centerface.web.app"
-          ]
+          "@type": "WebPage",
+          "url": "https://ahmadraza.cv/#/work",
+          "name": "Work"
         },
         {
-          "@type": "WebSite",
-          "@id": "https://ahmadraza.cv/#website",
-          "url": "https://ahmadraza.cv/",
-          "name": "AhmadRaza — Blue Era Portfolio",
-          "description": "Portfolio of Ahmad Raza: work, about, stuff lab, contact and AhmadOS.",
-          "inLanguage": "en",
-          "publisher": { "@id": "https://ahmadraza.cv/#person" },
-          "hasPart": [
-            { "@type": "WebPage", "url": "https://ahmadraza.cv/#/work", "name": "Work" },
-            { "@type": "WebPage", "url": "https://ahmadraza.cv/#/about", "name": "About" },
-            { "@type": "WebPage", "url": "https://ahmadraza.cv/#/resume", "name": "Resume" },
-            { "@type": "WebPage", "url": "https://ahmadraza.cv/#/stuff", "name": "Stuff Lab" },
-            { "@type": "WebPage", "url": "https://ahmadraza.cv/#/contact", "name": "Contact" },
-            { "@type": "WebApplication", "url": "https://ahmadraza.cv/os/", "name": "AhmadOS", "applicationCategory": "GameApplication", "operatingSystem": "Web", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
-          ]
+          "@type": "WebPage",
+          "url": "https://ahmadraza.cv/#/about",
+          "name": "About"
         },
         {
-          "@type": "ItemList",
-          "name": "Selected projects by Ahmad Raza",
-          "itemListElement": [
-            { "@type": "ListItem", "position": 1, "item": { "@type": "SoftwareApplication", "name": "NOOK", "applicationCategory": "ProductivityApplication", "operatingSystem": "Desktop", "description": "Tiny pixel universe & productivity OS: notes, graph, Pomodoro, 12 arcade games & AI pet." } },
-            { "@type": "ListItem", "position": 2, "item": { "@type": "SoftwareApplication", "name": "CenterFace AI", "url": "https://centerface.web.app", "applicationCategory": "MultimediaApplication", "operatingSystem": "Web", "description": "Browser-based video editor with local AI motion tracking & face locking." } },
-            { "@type": "ListItem", "position": 3, "item": { "@type": "SoftwareApplication", "name": "ZFound", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Desktop", "description": "Offline visual similarity search & automated batch inventory cataloging." } },
-            { "@type": "ListItem", "position": 4, "item": { "@type": "SoftwareApplication", "name": "free-ui", "applicationCategory": "DeveloperApplication", "operatingSystem": "Web", "description": "Free MIT UI template library — React 19, TypeScript, Tailwind 4, Vite." } },
-            { "@type": "ListItem", "position": 5, "item": { "@type": "WebApplication", "name": "AhmadOS", "url": "https://ahmadraza.cv/os/", "applicationCategory": "GameApplication", "operatingSystem": "Web", "description": "The whole portfolio as a bootable pixel desktop OS." } }
-          ]
+          "@type": "WebPage",
+          "url": "https://ahmadraza.cv/#/resume",
+          "name": "Resume"
+        },
+        {
+          "@type": "WebPage",
+          "url": "https://ahmadraza.cv/#/stuff",
+          "name": "Stuff Lab"
+        },
+        {
+          "@type": "WebPage",
+          "url": "https://ahmadraza.cv/#/contact",
+          "name": "Contact"
+        },
+        {
+          "@type": "WebApplication",
+          "url": "https://ahmadraza.cv/os/",
+          "name": "AhmadOS",
+          "applicationCategory": "GameApplication",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
         }
       ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "Selected projects by Ahmad Raza",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "NOOK",
+            "applicationCategory": "ProductivityApplication",
+            "operatingSystem": "Desktop",
+            "description": "Tiny pixel universe & productivity OS: notes, graph, Pomodoro, 12 arcade games & AI pet."
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "CenterFace AI",
+            "url": "https://centerface.web.app",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Web",
+            "description": "Browser-based video editor with local AI motion tracking & face locking."
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "ZFound",
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Desktop",
+            "description": "Offline visual similarity search & automated batch inventory cataloging."
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": "free-ui",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Web",
+            "description": "Free MIT UI template library \u2014 React 19, TypeScript, Tailwind 4, Vite."
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "WebApplication",
+            "name": "AhmadOS",
+            "url": "https://ahmadraza.cv/os/",
+            "applicationCategory": "GameApplication",
+            "operatingSystem": "Web",
+            "description": "The whole portfolio as a bootable pixel desktop OS."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://ahmadraza.cv/#team-realhackers",
+      "name": "Team RealHackers",
+      "url": "https://realhackers.pages.dev",
+      "slogan": "Quiet Work for Loud Problems",
+      "foundingDate": "2024-01",
+      "founder": {
+        "@id": "https://ahmadraza.cv/#ahmad-raza"
+      },
+      "sameAs": [
+        "https://github.com/TeamRealHacker",
+        "https://realhackers.pages.dev"
+      ],
+      "description": "Design & engineering studio crafting calm software since 2024 \u2014 typographic UI systems, realtime motion, AI assistants and automation, minimal identities. Four projects a year.",
+      "knowsAbout": [
+        "Web Development",
+        "UI/UX Design",
+        "AI Assistants",
+        "Motion Design",
+        "Agentic Engineering"
+      ]
     }
-    </script>
+  ]
+}</script>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230d1424'/%3E%3Cpath d='M32 10 L52 54 H43 L39 44 H25 L21 54 H12 Z M32 26 L27.8 38 H36.2 Z' fill='%233b82f6'/%3E%3C/svg%3E" />
     <title>AhmadRaza | Full-Stack Developer & Agentic Engineer</title>
     <script>
