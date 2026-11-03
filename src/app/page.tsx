@@ -10,7 +10,7 @@ import { site } from "@/data/site";
 import { getProjects } from "@/lib/projects-store";
 
 /* Projects can be published from the admin console at runtime. */
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 const jsonLd = {
   "@context": "https://schema.org",

@@ -5,7 +5,7 @@ import { PakistanFlag } from "@/components/icons";
 import { getProjects } from "@/lib/projects-store";
 
 /* Projects can be published from the admin console at runtime. */
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Work",
