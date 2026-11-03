@@ -1,0 +1,44 @@
+{
+  "name": "ahmadraza-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Ahmad Raza's personal portfolio — cleaned Next.js starter with real project data.",
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0",
+    "build": "next build",
+    "start": "next start -H 0.0.0.0",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:dev": "opennextjs-cloudflare dev",
+    "cf:deploy": "opennextjs-cloudflare deploy",
+    "cf:preview": "opennextjs-cloudflare preview",
+    "cf:upload": "opennextjs-cloudflare upload",
+    "db:create": "wrangler d1 create ahmadraza-portfolio",
+    "db:migrate": "wrangler d1 execute ahmadraza-portfolio --remote --file=./db/schema.sql",
+    "db:migrate:local": "wrangler d1 execute ahmadraza-portfolio --local --file=./db/schema.sql",
+    "db:query": "wrangler d1 execute ahmadraza-portfolio --remote --command",
+    "db:verify": "node scripts/verify-d1.mjs"
+  },
+  "dependencies": {
+    "framer-motion": "^14.9.0",
+    "geist": "^1.9.0",
+    "lucide-react": "^1.66.0",
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.0",
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "22.19.15",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
+    "postcss": "8.5.8",
+    "tailwindcss": "4.1.17",
+    "typescript": "5.9.3",
+    "wrangler": "^4.86.0"
+  }
+}

@@ -1,0 +1,18 @@
+# Ahmad Raza — personal portfolio
+# A machine-readable summary for assistants and crawlers.
+
+Site: https://ahmadraza.cv
+Owner: Ahmad Raza (@MrRealORG), Founder & Developer at RealHackers, Faisalabad, Punjab, Pakistan.
+Summary: A personal portfolio — selected projects, an About page, a Life wall with custom emoji reactions, five switchable sky palettes, and open source on GitHub.
+
+## Pages
+- / Home — compact realistic banner, GitHub activity, editorial profile, selected work
+- /about About — background, education, skills, socials
+- /work Work — seven case studies
+- /life Life — an empty wall by default; the owner uploads his own photos
+- /work/<slug> — case study pages
+
+## Systems
+- Next.js 16 / React 19, no database. Local JSON files in /data plus browser localStorage.
+- APIs: /api/board, /api/reactions, /api/visitors, /api/github, /api/github-repos, /api/health, /api/admin
+- Five sky themes: space, redmoon, sun, sunset, midnight (persisted as ar_sky_theme)

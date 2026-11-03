@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+build/
+.open-next/
+.wrangler/
+*.tsbuildinfo
+data/board.json
+data/visitors.json
+data/projects.json
+.env
+.env.local
+.env.*.local
+.DS_Store
+npm-debug.log*

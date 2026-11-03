@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ahmadraza-portfolio",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  // Opt-in flag read by src/lib/storage.ts before it touches env.DB.
+  "vars": {
+    "AR_D1_BINDING": "1"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ahmadraza-portfolio",
+      // Replace with the id printed by `npm run db:create` (or use `wrangler d1 create`).
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+    }
+  ],
+  "observability": { "enabled": true }
+}
