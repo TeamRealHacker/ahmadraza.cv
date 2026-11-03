@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
     deviceSizes: [420, 640, 828, 1080, 1280, 1600],
     imageSizes: [64, 128, 256, 384],
   },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "framer-motion"],
+  },
   async headers() {
     const security = [
       { key: "X-Content-Type-Options", value: "nosniff" },
@@ -21,6 +24,14 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/images/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/videos/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+      },
+      {
+        source: "/fonts/:path*",
         headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
       },
       {

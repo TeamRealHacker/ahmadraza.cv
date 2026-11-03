@@ -1,10 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { createPortal } from "react-dom";
 import Image from "next/image";
-import { Maximize2, X } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Maximize2 } from "lucide-react";
 import { projectVideo, type ProjectVideo } from "@/data/project-videos";
+
+/** The full-screen modal loads only when someone opens it, never on first paint. */
+const VideoModal = dynamic(() => import("./video-modal").then((m) => m.VideoModal), { ssr: false });
 
 export type VideoInfo = {
   title: string;
@@ -39,6 +43,11 @@ type AutoVideoProps = {
  * A screen recording that is ALREADY PLAYING — no play button, no click needed.
  * Muted + looped + inline so browsers allow autoplay; a ref effect re-kicks
  * playback because React does not always emit the `muted` attribute in SSR HTML.
+ *
+ * Lazy by design: no video bytes are fetched until the player is near the
+ * viewport (IntersectionObserver, 400px margin). Until then the poster shows
+ * with a small loading indicator, so offscreen recordings (the tour, every
+ * project below the fold) cost nothing on first paint.
  */
 export function AutoVideo({
   video,
@@ -49,10 +58,26 @@ export function AutoVideo({
   showRec = false,
   children,
 }: AutoVideoProps) {
-  const ref = useRef<HTMLVideoElement>(null);
+  const targetRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [inView, setInView] = useState(false);
+  const [canPlay, setCanPlay] = useState(false);
 
   useEffect(() => {
-    const v = ref.current;
+    const el = targetRef.current;
+    if (!el) { setInView(true); return; }
+    if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
+      { rootMargin: "400px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView) return;
+    const v = videoRef.current;
     if (!v) return;
     const kick = () => {
       // Some browsers ignore the SSR `muted` attribute; set the property too.
@@ -70,12 +95,38 @@ export function AutoVideo({
       v.removeEventListener("canplay", kick);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [video.src]);
+  }, [video.src, inView]);
+
+  const expand = onExpand ? (
+    <button type="button" className="ar-video-expand" onClick={onExpand} aria-label={`Open ${video.title} full screen`} title="Full screen">
+      <Maximize2 size={13} />
+    </button>
+  ) : null;
+
+  if (!inView) {
+    return (
+      <>
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <img
+          ref={(el) => { targetRef.current = el; }}
+          src={video.poster}
+          alt=""
+          aria-hidden="true"
+          className={className}
+          loading="lazy"
+        />
+        <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>
+        {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
+        {children}
+        {expand}
+      </>
+    );
+  }
 
   return (
     <>
       <video
-        ref={ref}
+        ref={(el) => { videoRef.current = el; targetRef.current = el; }}
         className={className}
         src={`${video.src}#t=${startAt}`}
         poster={video.poster}
@@ -86,54 +137,15 @@ export function AutoVideo({
         controls={controls}
         preload="metadata"
         disablePictureInPicture
+        onCanPlay={() => setCanPlay(true)}
+        onLoadedData={() => setCanPlay(true)}
         aria-label={`${video.title} — recorded preview, playing automatically`}
       />
+      {!canPlay && <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>}
       {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
       {children}
-      {onExpand && (
-        <button type="button" className="ar-video-expand" onClick={onExpand} aria-label={`Open ${video.title} full screen`} title="Full screen">
-          <Maximize2 size={13} />
-        </button>
-      )}
+      {expand}
     </>
-  );
-}
-
-/** Full-screen player with controls — an optional extra, never required to watch. */
-export function VideoModal({ video, onClose }: { video: VideoInfo; onClose: () => void }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  return createPortal(
-    <div className="project-video-modal" role="dialog" aria-modal="true" aria-label={`${video.title} recording`} onClick={onClose}>
-      <div className="project-video-modal-inner" onClick={(e) => e.stopPropagation()}>
-        <div className="project-video-modal-head">
-          <div>
-            <p>{video.kind} · recorded from the live build</p>
-            <h3>{video.title}</h3>
-          </div>
-          <button type="button" onClick={onClose} aria-label="Close recording"><X size={18} /></button>
-        </div>
-        <video
-          src={`${video.src}#t=${video.startAt ?? 1.2}`}
-          poster={video.poster}
-          controls
-          autoPlay
-          loop
-          playsInline
-          preload="metadata"
-        />
-        <p className="project-video-modal-foot">{video.source} · Esc to close</p>
-      </div>
-    </div>,
-    document.body,
   );
 }
 

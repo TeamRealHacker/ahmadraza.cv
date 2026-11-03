@@ -24,7 +24,7 @@ export function VisitorCounter() {
         <span>
           Visitor{" "}
           <strong className="tabular-nums">
-            {count === null ? "…" : `#${count}`}
+            {count === null ? <span className="skeleton skeleton-inline" aria-label="Loading visitor count" /> : `#${count}`}
           </strong>
         </span>
       )}

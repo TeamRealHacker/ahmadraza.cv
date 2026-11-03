@@ -488,8 +488,19 @@ export function LifeGrid({ initialPosts, initialCounts }: { initialPosts: LifePo
         </AnimatePresence>
       </div>
 
-      {/* Posts — the wall starts empty; everything here is uploaded by Ahmad. */}
-      {posts.length === 0 ? (
+      {/* While the wall hydrates (local reactions merge in), show same-layout
+          skeleton cards instead of a half-painted grid, so nothing jumps. */}
+      {!mounted ? (
+        <ul className="life-posts columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4" aria-busy="true" aria-label="Loading moments">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <li key={i} className="life-card" aria-hidden="true">
+              <div className="skeleton aspect-[4/3] w-full rounded-2xl" />
+              <div className="mt-3 skeleton h-4 w-full" />
+              <div className="mt-2 skeleton h-4 w-2/3" />
+            </li>
+          ))}
+        </ul>
+      ) : posts.length === 0 ? (
         <div className="life-empty" data-reveal>
           <span className="life-empty-icon" aria-hidden="true"><ImagePlus size={27} /></span>
           <h3>Your wall is empty.</h3>
@@ -613,7 +624,7 @@ function PostCard({
       <figure className="life-card group">
         <div className="life-media" onDoubleClick={() => onToggle(post.id, "heart", "add")}>
           {post.src ? (
-            <img src={post.src} alt={post.alt} width={post.width} height={post.height} loading={index < 2 ? "eager" : "lazy"} />
+            <img src={post.src} alt={post.alt} width={post.width} height={post.height} loading="lazy" />
           ) : (
             <div className="life-media-empty" aria-hidden="true">
               <ImagePlus size={24} /><span>Text-only moment</span>

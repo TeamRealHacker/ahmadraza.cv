@@ -20,7 +20,6 @@ export function ProfileHeader() {
             width={400}
             height={400}
             sizes="(max-width: 640px) 96px, 176px"
-            priority
           />
         </div>
 

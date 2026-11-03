@@ -743,6 +743,7 @@ body:has(.theme-float:hover) .theme-ring { transform: scale(1.07); }
 }
 
 /* loading skeleton --------------------------------------------------- */
+.skeleton-inline { display: inline-block; width: 3.5ch; height: 1em; vertical-align: -0.15em; }
 .skeleton { border-radius: 10px; background: linear-gradient(100deg, color-mix(in srgb, var(--fg) 7%, transparent) 30%, color-mix(in srgb, var(--fg) 14%, transparent) 50%, color-mix(in srgb, var(--fg) 7%, transparent) 70%); background-size: 220% 100%; animation: shimmer 1.4s linear infinite; }
 @keyframes shimmer { to { background-position-x: -220%; } }
 
@@ -1357,6 +1358,7 @@ body:has(.admin-locked) :is(.site-nav, .theme-float, .theme-ring, .theme-note, .
   object-position: top;
   background: #07070d;
 }
+.ar-video-loading { position: absolute; left: 50%; top: 50%; z-index: 2; transform: translate(-50%, -50%); padding: 6px 12px; border: 1px solid rgba(255,255,255,.22); border-radius: 999px; background: rgba(8,8,14,.62); backdrop-filter: blur(6px); color: #fff; font-size: 11px; white-space: nowrap; }
 .ar-video-rec {
   position: absolute;
   top: 14px;

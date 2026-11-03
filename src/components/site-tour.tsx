@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { AutoVideo, TOUR_VIDEO, VideoModal } from "./project-video";
+import { AutoVideo, TOUR_VIDEO } from "./project-video";
+
+const VideoModal = dynamic(() => import("./video-modal").then((m) => m.VideoModal), { ssr: false });
 
 /** A recorded scroll-through of the live site, already playing in place. */
 export function SiteTour() {

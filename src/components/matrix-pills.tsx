@@ -17,7 +17,6 @@ export function MatrixPills() {
         height={816}
         sizes="(min-width: 768px) 700px, 92vw"
         className="pill-art-img"
-        priority
       />
 
       <button

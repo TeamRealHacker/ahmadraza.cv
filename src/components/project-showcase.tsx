@@ -31,7 +31,6 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
               image={feature.image}
               alt={`${feature.title} — ${feature.tagline}`}
               sizes="(max-width: 1024px) 100vw, 960px"
-              priority
             />
             <span className="showcase-accent" aria-hidden="true" />
           </div>

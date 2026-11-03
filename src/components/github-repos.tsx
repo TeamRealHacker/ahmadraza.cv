@@ -46,7 +46,41 @@ export function GithubRepos() {
     return () => { cancelled = true; };
   }, []);
 
-  if (!repos) return null;
+  if (!repos) {
+    return (
+      <section aria-label="Open source on GitHub" aria-busy="true" className="mx-auto max-w-5xl px-5 py-10 sm:px-8" data-reveal>
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div className="w-full max-w-xs">
+            <div className="skeleton h-6 w-2/3" />
+            <div className="mt-2 skeleton h-4 w-full" />
+          </div>
+          <div className="skeleton h-8 w-24 shrink-0 rounded-full" />
+        </div>
+        <ul className="grid gap-3 sm:grid-cols-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <li key={i} className="rounded-2xl border border-line bg-card px-5 py-4" aria-hidden="true">
+              <div className="skeleton h-5 w-1/2" />
+              <div className="mt-3 skeleton h-4 w-full" />
+              <div className="mt-2 skeleton h-4 w-2/3" />
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-center text-xs text-muted">Loading repositories…</p>
+      </section>
+    );
+  }
+
+  if (repos.length === 0) {
+    return (
+      <section aria-labelledby="github-repos-title" className="mx-auto max-w-5xl px-5 py-10 sm:px-8" data-reveal>
+        <h2 id="github-repos-title" className="text-xl font-semibold">Open source on GitHub</h2>
+        <p className="mt-2 text-sm text-muted">No public repositories to show right now — try the profile instead.</p>
+        <a href={`https://github.com/${site.handle}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs hover:bg-fg/[0.07]">
+          @{site.handle} <ArrowUpRight size={12} />
+        </a>
+      </section>
+    );
+  }
 
   return (
     <section aria-labelledby="github-repos-title" className="mx-auto max-w-5xl px-5 py-10 sm:px-8" data-reveal>

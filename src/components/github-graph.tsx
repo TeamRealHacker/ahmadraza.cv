@@ -66,7 +66,7 @@ export function GithubGraph() {
   const height = 7 * (CELL + GAP) + 16;
 
   return (
-    <div ref={boxRef} className="min-w-0 overflow-hidden rounded-2xl border border-line bg-card px-5 py-4">
+    <div ref={boxRef} aria-busy={state.status === "loading"} className="min-w-0 overflow-hidden rounded-2xl border border-line bg-card px-5 py-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-medium">GitHub activity</h3>
@@ -123,7 +123,7 @@ export function GithubGraph() {
           </svg>
         ) : (
           <div
-            className={`grid h-[110px] min-w-[640px] grid-flow-col grid-rows-7 gap-[3px] ${state.status === "error" ? "opacity-40" : "animate-pulse"}`}
+            className={`grid h-[110px] min-w-[640px] grid-flow-col grid-rows-7 gap-[3px] ${state.status === "error" ? "opacity-40" : "skeleton animate-pulse"}`}
             aria-hidden="true"
           >
             {Array.from({ length: 7 * 53 }).map((_, i) => (
