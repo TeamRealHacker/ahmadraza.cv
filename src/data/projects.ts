@@ -50,9 +50,9 @@ export const projects: Project[] = [
     title: "Kite",
     tagline: "1:1 messenger · Flutter + Firebase",
     description:
-      "Kite is a light, fast one-to-one messenger for Android — chats, people, reactions, replies, themes and an admin dashboard, built with Flutter and Firebase. It runs in demo mode until a Firebase project is connected.",
+      "Kite is a light, fast one-to-one messenger for Android — chats, people, reactions, replies, themes and an admin dashboard, built with Flutter and Firebase. The video is a real recording of the app running in demo mode — splash, sign-in, chats list and a live chat with its typing indicator — until a Firebase project is connected.",
     longDescription:
-      "Kite 2.0 is a light, fast one-to-one messenger for Android, built with Flutter and Firebase. It covers the full messenger loop: register and sign in, a chats list with pin, mute, archive and search, real-time 1:1 text and photo messaging with replies, reactions, message editing and deletion, typing indicators and read receipts, plus people search, contact profiles, block and report, light/dark themes with accent colours and wallpapers, and an in-app and web admin dashboard. The app currently runs in demo mode with sample chats — server actions connect once a Firebase project is added.",
+      "Kite 2.0 is a light, fast one-to-one messenger for Android, built with Flutter and Firebase. It covers the full messenger loop: register and sign in, a chats list with pin, mute, archive and search, real-time 1:1 text and photo messaging with replies, reactions, message editing and deletion, typing indicators and read receipts, plus people search, contact profiles, block and report, light/dark themes with accent colours and wallpapers, and an in-app and web admin dashboard. The video above is a real recording of the app running in demo mode — splash, sign-in, chats list and a live chat with its typing indicator — with sample chats; server actions connect once a Firebase project is added.",
     highlights: ["1:1 text & photo messaging", "Replies, reactions, edit & delete", "Typing indicators & read receipts", "Pin, mute, archive & chat search", "Light/dark themes & admin dashboard"],
     image: "/images/kite-app.webp",
     href: "",
