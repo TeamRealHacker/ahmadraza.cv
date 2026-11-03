@@ -24,6 +24,7 @@ function Stars({ rating, size = 15 }: { rating: number; size?: number }) {
 
 export function Reviews() {
   const [reviews, setReviews] = useState<Review[] | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [name, setName] = useState("");
   const [rating, setRating] = useState(5);
   const [message, setMessage] = useState("");
@@ -38,6 +39,10 @@ export function Reviews() {
         else setReviews([]);
       })
       .catch(() => setReviews([]));
+    /* Admins get a delete button on each review; visitors never see it. */
+    fetch("/api/admin", { credentials: "same-origin" })
+      .then((res) => setIsAdmin(res.ok))
+      .catch(() => setIsAdmin(false));
   }, []);
 
   const submit = async () => {
@@ -64,6 +69,21 @@ export function Reviews() {
     }
   };
 
+  const remove = async (id: string) => {
+    const res = await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ action: "delete", id }),
+    });
+    if (res.ok) setReviews((current) => (current ?? []).filter((r) => r.id !== id));
+  };
+
+  const average =
+    reviews && reviews.length
+      ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
+      : null;
+
   return (
     <section aria-labelledby="reviews-title" className="projects-section" style={{ paddingTop: 8 }}>
       <div className="projects-head" data-reveal>
@@ -73,6 +93,11 @@ export function Reviews() {
             What people <em>say</em>
           </h2>
           <p className="work-head-note">Worked with Ahmad? Leave a review — it shows up here right away.</p>
+          {average && (
+            <p className="work-head-note" style={{ marginTop: 6 }}>
+              <Stars rating={Math.round(Number(average))} /> {average} average · {reviews!.length} review{reviews!.length > 1 ? "s" : ""}
+            </p>
+          )}
         </div>
       </div>
 
@@ -136,7 +161,20 @@ export function Reviews() {
               <li key={r.id} style={{ border: "1px solid var(--border, #ddd)", borderRadius: 16, padding: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center" }}>
                   <strong>{r.name}</strong>
-                  <Stars rating={r.rating} />
+                  <span style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    <Stars rating={r.rating} />
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => void remove(r.id)}
+                        aria-label={`Delete review by ${r.name}`}
+                        title="Delete this review"
+                        style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, opacity: 0.6 }}
+                      >
+                        ×
+                      </button>
+                    )}
+                  </span>
                 </div>
                 <p style={{ margin: "8px 0 4px", whiteSpace: "pre-wrap" }}>{r.message}</p>
                 <small style={{ opacity: 0.6 }}>

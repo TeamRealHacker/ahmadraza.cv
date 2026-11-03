@@ -4,23 +4,7 @@ import { ProfileHeader } from "@/components/profile-header";
 import { Projects } from "@/components/projects";
 import { GithubRepos } from "@/components/github-repos";
 import { Reviews } from "@/components/reviews";
-import dynamicImport from "next/dynamic";
 
-/** The tour player (3.2 MB recording) is below the fold — load it lazily. */
-const SiteTour = dynamicImport(() => import("@/components/site-tour").then((m) => m.SiteTour), {
-  loading: () => (
-    <section aria-label="Site tour" aria-busy="true" className="tour-section">
-      <div className="tour-inner">
-        <div>
-          <div className="skeleton h-4 w-24" />
-          <div className="mt-4 skeleton h-10 w-2/3" />
-          <div className="mt-3 skeleton h-4 w-full" />
-        </div>
-        <div className="skeleton aspect-[16/10] w-full rounded-2xl" />
-      </div>
-    </section>
-  ),
-});
 import { Footer } from "@/components/footer";
 import { site } from "@/data/site";
 import { getProjects } from "@/lib/projects-store";
@@ -56,7 +40,6 @@ export default async function HomePage() {
         <Projects projects={allProjects} />
         <Reviews />
         <GithubRepos />
-        <SiteTour />
       </main>
       <Footer />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
