@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { addPost, applyReaction, readBoard, removePost } from "@/lib/board";
+import { isAdminRequest } from "@/lib/admin-session";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,15 @@ export async function POST(req: Request) {
   if (body.action === "react") {
     const state = await applyReaction(String(body.postId ?? ""), String(body.emoji ?? ""), Number(body.delta));
     return state ? NextResponse.json(state) : NextResponse.json({ error: "Invalid reaction" }, { status: 400 });
+  }
+
+  /* Posting and deleting moments is admin-only. The Life wall composer is
+     hidden for visitors; this server gate is what actually enforces it —
+     reactions above stay public. */
+  if (body.action === "post" || body.action === "delete") {
+    if (!isAdminRequest(req)) {
+      return NextResponse.json({ error: "Admin only" }, { status: 401 });
+    }
   }
 
   if (body.action === "post") {

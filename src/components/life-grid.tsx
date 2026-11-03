@@ -182,7 +182,7 @@ function ReactionRow({
   );
 }
 
-export function LifeGrid({ initialPosts, initialCounts }: { initialPosts: LifePost[]; initialCounts: Counts }) {
+export function LifeGrid({ initialPosts, initialCounts, isAdmin = false }: { initialPosts: LifePost[]; initialCounts: Counts; isAdmin?: boolean }) {
   const [posts, setPosts] = useState<LifePost[]>(initialPosts);
   const [counts, setCounts] = useState<Counts>(initialCounts);
   const [mine, setMine] = useState<Set<string>>(new Set());
@@ -217,12 +217,13 @@ export function LifeGrid({ initialPosts, initialCounts }: { initialPosts: LifePo
     });
   }, []);
 
-  /* The Life hero's "New moment" button opens the composer from up top. */
+  /* The Life hero's "New moment" button opens the composer from up top —
+     admin only; the button itself is hidden for visitors. */
   useEffect(() => {
-    const open = () => setComposerOpen(true);
+    const open = () => { if (isAdmin) setComposerOpen(true); };
     window.addEventListener("ar:open-composer", open);
     return () => window.removeEventListener("ar:open-composer", open);
-  }, []);
+  }, [isAdmin]);
 
   const flash = useCallback((msg: string) => {
     setNotice(msg);
@@ -432,7 +433,8 @@ export function LifeGrid({ initialPosts, initialCounts }: { initialPosts: LifePo
 
   return (
     <>
-      {/* Composer */}
+      {/* Composer — admin only. Visitors never see this element at all. */}
+      {isAdmin && (
       <div className="life-composer" id="life-composer" data-reveal>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -487,6 +489,7 @@ export function LifeGrid({ initialPosts, initialCounts }: { initialPosts: LifePo
           )}
         </AnimatePresence>
       </div>
+      )}
 
       {/* While the wall hydrates (local reactions merge in), show same-layout
           skeleton cards instead of a half-painted grid, so nothing jumps. */}
@@ -504,18 +507,20 @@ export function LifeGrid({ initialPosts, initialCounts }: { initialPosts: LifePo
         <div className="life-empty" data-reveal>
           <span className="life-empty-icon" aria-hidden="true"><ImagePlus size={27} /></span>
           <h3>Your wall is empty.</h3>
-          <p>All the old photos are gone. Drop your own moments below and they&apos;ll live right here.</p>
-          <button
-            type="button"
-            className="life-button life-button-primary"
-            onClick={() => {
-              setComposerOpen(true);
-              window.setTimeout(() => document.getElementById("life-composer")?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
-            }}
-          >
-            <Plus size={15} /> Add the first moment
-          </button>
-          <small>JPG, PNG or WebP — resized automatically, kept on this device.</small>
+          <p>Moments Ahmad posts will live right here.</p>
+          {isAdmin && (
+            <button
+              type="button"
+              className="life-button life-button-primary"
+              onClick={() => {
+                setComposerOpen(true);
+                window.setTimeout(() => document.getElementById("life-composer")?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
+              }}
+            >
+              <Plus size={15} /> Add the first moment
+            </button>
+          )}
+          {isAdmin && <small>JPG, PNG or WebP — resized automatically, kept on this device.</small>}
         </div>
       ) : (
         <ul className="life-posts columns-1 gap-4 sm:columns-2 lg:columns-3 [&>li]:mb-4">

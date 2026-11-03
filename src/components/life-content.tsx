@@ -27,6 +27,17 @@ export function LifeContent({
   initialCounts: Record<string, Record<string, number>>;
 }) {
   const [sky, setSky] = useState<string>("space");
+  /* Admin-only composer: only true after GET /api/admin returns 200 with
+     the HttpOnly admin session cookie. Starts false, so visitors never
+     see the composer flash in. */
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/admin", { credentials: "same-origin" })
+      .then((res) => { if (alive && res.ok) setIsAdmin(true); })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
   const [counts, setCounts] = useState<number[]>([0, 0, 0]);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -143,12 +154,14 @@ export function LifeContent({
             <span className="about-signature-handle">— @{site.handle}</span>
           </div>
           <p className="about-lead">
-            An empty wall, on purpose. Upload your own photos, tap an emoji to react, or add an animated one of your own.
+            Moments Ahmad posts himself. Tap an emoji to react, or add an animated one of your own.
           </p>
           <div className="about-actions">
-            <button type="button" onClick={openComposer} className="about-cta">
-              <Camera size={15} /> New moment <ArrowUpRight size={14} />
-            </button>
+            {isAdmin && (
+              <button type="button" onClick={openComposer} className="about-cta">
+                <Camera size={15} /> New moment <ArrowUpRight size={14} />
+              </button>
+            )}
             <Link href="/work" className="about-work-link">
               See the work <ArrowRight size={15} />
             </Link>
@@ -167,7 +180,7 @@ export function LifeContent({
           ))}
         </div>
 
-        <LifeGrid initialPosts={initialPosts} initialCounts={initialCounts} />
+        <LifeGrid initialPosts={initialPosts} initialCounts={initialCounts} isAdmin={isAdmin} />
       </div>
     </main>
   );

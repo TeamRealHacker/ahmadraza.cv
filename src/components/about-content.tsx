@@ -8,6 +8,7 @@ import { ArrowRight, ArrowUpRight, Check, Copy, Mail, MapPin } from "lucide-reac
 import { Stars } from "./stars";
 import { PakistanFlag, SocialIcon } from "./icons";
 import { site } from "@/data/site";
+import { EXPERIENCE } from "@/data/experience";
 import { projects } from "@/data/projects";
 import { SKIES, SKY_STORAGE_KEY } from "@/data/skies";
 import { SKY_EVENT, isValidSky } from "@/lib/sky";
@@ -254,6 +255,33 @@ export function AboutContent() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section className="about-skills" data-reveal>
+          <div className="about-section-head">
+            <span className="about-step-node" aria-hidden="true">06</span>
+            <div>
+              <p className="about-step-kicker">Where I&apos;ve worked</p>
+              <h2>Experience</h2>
+            </div>
+          </div>
+          <ul className="about-skill-grid">
+            {EXPERIENCE.map((e) => (
+              <li key={e.org}>
+                <span className="about-skill-num">{e.period ?? "—"}</span>
+                <span>
+                  <strong>{e.org}</strong> — {e.role}
+                  <br />
+                  <small>{e.location}{e.sector ? ` · ${e.sector}` : ""}</small>
+                  <br />
+                  <small>{e.note}</small>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="about-muted" style={{ marginTop: 12, fontSize: 13, opacity: 0.75 }}>
+            Roles and dates for WASA and Minal Enterprises to be added — Ahmad hasn&apos;t shared them yet.
+          </p>
         </section>
 
         <div className="about-signoff" data-reveal aria-hidden="true">

@@ -3,6 +3,7 @@ import { GithubGraph } from "@/components/github-graph";
 import { ProfileHeader } from "@/components/profile-header";
 import { Projects } from "@/components/projects";
 import { GithubRepos } from "@/components/github-repos";
+import { Reviews } from "@/components/reviews";
 import dynamicImport from "next/dynamic";
 
 /** The tour player (3.2 MB recording) is below the fold — load it lazily. */
@@ -53,6 +54,7 @@ export default async function HomePage() {
         </div>
         <ProfileHeader />
         <Projects projects={allProjects} />
+        <Reviews />
         <GithubRepos />
         <SiteTour />
       </main>
