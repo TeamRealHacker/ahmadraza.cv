@@ -7,7 +7,7 @@ import {
   Activity, ArrowLeft, ArrowUpRight, BarChart3, Check, Clipboard, Copy, Eye,
   Film, FolderPlus, Gauge, HeartPulse, ImagePlus, LayoutDashboard, LockKeyhole,
   LogOut, MonitorPlay, Moon, Palette, Pencil, Plus, RefreshCw, RotateCcw, Save,
-  Send, ShieldCheck, SlidersHorizontal, Sparkles, Sun, Trash2, WandSparkles, X,
+  Send, ShieldCheck, SlidersHorizontal, Sparkles, Star, Sun, Trash2, WandSparkles, X,
 } from "lucide-react";
 import { SKIES } from "@/data/skies";
 import { animatedEmojis } from "@/data/life";
@@ -37,7 +37,8 @@ type AdminData = {
   storage?: string;
 };
 type PageView = { path: string; at: string };
-type Tab = "overview" | "life" | "projects" | "reactions" | "recordings" | "audience" | "appearance" | "audit" | "tour";
+type Tab = "overview" | "life" | "projects" | "reactions" | "recordings" | "audience" | "appearance" | "audit" | "tour" | "reviews";
+type AdminReview = { id: string; name: string; rating: number; message: string; createdAt: string };
 
 type ProjectForm = {
   slug: string; title: string; tagline: string; description: string;
@@ -64,6 +65,7 @@ const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "life", label: "Life wall", icon: ImagePlus },
   { id: "projects", label: "Projects", icon: FolderPlus },
   { id: "reactions", label: "Reactions", icon: HeartPulse },
+  { id: "reviews", label: "Reviews", icon: Star },
   { id: "recordings", label: "Recordings", icon: MonitorPlay },
   { id: "audience", label: "Audience", icon: Activity },
   { id: "appearance", label: "Appearance", icon: Palette },
@@ -103,6 +105,10 @@ export function AdminConsole() {
   const [copied, setCopied] = useState(false);
   const [projectForm, setProjectForm] = useState<ProjectForm>(EMPTY_PROJECT);
   const [editingSlug, setEditingSlug] = useState<string | null>(null);
+  const [adminReviews, setAdminReviews] = useState<AdminReview[]>([]);
+  const [reviewName, setReviewName] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewMessage, setReviewMessage] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const noticeTimer = useRef<number | null>(null);
 
@@ -132,10 +138,68 @@ export function AdminConsole() {
       setViews(readPageViews());
       setSky(localStorage.getItem("ar_sky_theme") ?? "space");
       setDark(document.documentElement.classList.contains("dark"));
+      /* Direct link support: /admin#reviews opens the Reviews tab. */
+      if (window.location.hash === "#reviews") setTab("reviews");
       void load();
     });
     return () => { if (noticeTimer.current) window.clearTimeout(noticeTimer.current); };
   }, [load]);
+
+  /* Reviews live in /api/reviews, not /api/admin — load them on demand. */
+  const loadReviews = useCallback(async () => {
+    try {
+      const res = await fetch("/api/reviews", { credentials: "same-origin", cache: "no-store" });
+      if (res.ok) {
+        const data = (await res.json()) as { reviews?: AdminReview[] };
+        setAdminReviews(Array.isArray(data.reviews) ? data.reviews : []);
+      }
+    } catch {
+      /* keep the previous list; the panel shows the error via flash */
+    }
+  }, []);
+
+  useEffect(() => {
+    if (unlocked && tab === "reviews") void loadReviews();
+  }, [unlocked, tab, loadReviews]);
+
+  const postReview = useCallback(async () => {
+    if (!reviewName.trim() || !reviewMessage.trim()) return;
+    setBusy(true);
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ name: reviewName.trim(), rating: reviewRating, message: reviewMessage.trim() }),
+      });
+      if (res.status === 401) { setUnlocked(false); throw new Error("locked"); }
+      if (!res.ok) throw new Error("request");
+      setReviewName("");
+      setReviewMessage("");
+      setReviewRating(5);
+      flash("Review posted ✓");
+      await loadReviews();
+    } catch {
+      flash("That review didn't go through");
+    } finally {
+      setBusy(false);
+    }
+  }, [reviewName, reviewMessage, reviewRating, loadReviews, flash]);
+
+  const deleteReview = useCallback(async (id: string) => {
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ action: "delete", id }),
+      });
+      if (res.status === 401) { setUnlocked(false); return; }
+      if (res.ok) { flash("Review deleted ✓"); await loadReviews(); }
+    } catch {
+      flash("That delete didn't go through");
+    }
+  }, [loadReviews, flash]);
 
   const run = useCallback(async (action: string, extra: Record<string, unknown> = {}) => {
     setBusy(true);
@@ -312,6 +376,7 @@ export function AdminConsole() {
                 <div className="admin-actions">
                   <button type="button" onClick={() => setTab("life")}><Plus size={14} /> Add a moment</button>
                   <button type="button" onClick={() => setTab("projects")}><FolderPlus size={14} /> Publish a project</button>
+                  <button type="button" onClick={() => setTab("reviews")}><Star size={14} /> Post a review</button>
                   <button type="button" onClick={() => setTab("recordings")}><MonitorPlay size={14} /> Watch recordings</button>
                   <button type="button" onClick={() => setTab("reactions")}><HeartPulse size={14} /> Manage reactions</button>
                   <button type="button" onClick={() => setTab("appearance")}><Palette size={14} /> Change the sky</button>
@@ -391,6 +456,51 @@ export function AdminConsole() {
                         <button type="button" title="Save caption" onClick={() => void run("edit", { id: p.id, caption: edits[p.id] ?? p.caption })}><Check size={14} /></button>
                         <button type="button" title="Delete" onClick={() => void run("delete", { id: p.id })}><Trash2 size={14} /></button>
                       </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* REVIEWS ------------------------------------------------------- */}
+        {tab === "reviews" && (
+          <div className="admin-stack">
+            <div className="admin-panel">
+              <h2><Star size={15} /> Post a review</h2>
+              <p className="admin-panel-note">Only you can post reviews now — the public form is gone from the home page. Post here and it appears on the home Reviews section right away.</p>
+              <div className="admin-project-form" style={{ display: "grid", gap: 10 }}>
+                <input value={reviewName} onChange={(e) => setReviewName(e.target.value)} maxLength={80} placeholder="Name (e.g. Usman Khan — Business Owner)" />
+                <div className="admin-row" style={{ alignItems: "center" }}>
+                  <span className="admin-muted">Rating:</span>
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button key={n} type="button" onClick={() => setReviewRating(n)} aria-label={`${n} stars`}
+                      style={{ fontSize: 22, color: n <= reviewRating ? "#eab308" : "#999", background: "none", border: "none", cursor: "pointer", padding: 2 }}>★</button>
+                  ))}
+                </div>
+                <textarea value={reviewMessage} onChange={(e) => setReviewMessage(e.target.value)} rows={3} maxLength={500} placeholder="The review message…" />
+                <div className="admin-row">
+                  <button type="button" className="admin-primary" disabled={busy || !reviewName.trim() || !reviewMessage.trim()} onClick={() => void postReview()}>
+                    <Send size={14} /> Post review
+                  </button>
+                  <span className="admin-muted">{reviewMessage.length}/500</span>
+                </div>
+              </div>
+            </div>
+            <div className="admin-panel">
+              <div className="admin-panel-head">
+                <h2><Star size={15} /> All reviews ({adminReviews.length})</h2>
+                <button type="button" className="admin-quiet-btn" onClick={() => void loadReviews()}><RefreshCw size={13} /> Refresh</button>
+              </div>
+              {adminReviews.length === 0 ? (
+                <p className="admin-empty">No reviews yet — post the first one above.</p>
+              ) : (
+                <ul className="admin-log">
+                  {adminReviews.map((r) => (
+                    <li key={r.id} style={{ alignItems: "flex-start" }}>
+                      <span><strong>{r.name}</strong> · {"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}<br />{r.message}</span>
+                      <button type="button" className="admin-danger-quiet" title="Delete this review" onClick={() => void deleteReview(r.id)}><Trash2 size={13} /></button>
                     </li>
                   ))}
                 </ul>

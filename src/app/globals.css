@@ -1460,6 +1460,9 @@ body:has(.admin-locked) :is(.site-nav, .theme-float, .theme-ring, .theme-note, .
 .review-submit:disabled { opacity: .45; cursor: default; }
 .review-count { color: var(--muted); font-size: 12px; }
 .review-notice { margin: 0; font-size: 14px; }
+.reviews-admin-link { text-align: center; margin: 24px 0 0; }
+.reviews-admin-link a { color: var(--muted); font-size: 14px; }
+.reviews-admin-link a:hover { color: var(--fg); }
 @media (max-width: 640px) {
   .reviews-grid { grid-template-columns: 1fr; }
   .reviews-summary { padding: 16px 18px; }

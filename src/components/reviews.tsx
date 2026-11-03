@@ -40,11 +40,6 @@ function initials(person: string): string {
 export function Reviews() {
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [name, setName] = useState("");
-  const [rating, setRating] = useState(5);
-  const [message, setMessage] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [notice, setNotice] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/reviews")
@@ -59,30 +54,6 @@ export function Reviews() {
       .then((res) => setIsAdmin(res.ok))
       .catch(() => setIsAdmin(false));
   }, []);
-
-  const submit = async () => {
-    if (!name.trim() || !message.trim() || busy) return;
-    setBusy(true);
-    setNotice(null);
-    try {
-      const res = await fetch("/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), rating, message: message.trim() }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error ?? "Could not post your review");
-      setReviews((current) => [data.review as Review, ...(current ?? [])]);
-      setName("");
-      setMessage("");
-      setRating(5);
-      setNotice("Thanks — your review is live below.");
-    } catch (e) {
-      setNotice(e instanceof Error ? e.message : "Could not post your review");
-    } finally {
-      setBusy(false);
-    }
-  };
 
   const remove = async (id: string) => {
     const res = await fetch("/api/reviews", {
@@ -175,55 +146,11 @@ export function Reviews() {
           </ul>
         )}
 
-        <form
-          className="review-form"
-          data-reveal
-          onSubmit={(e) => {
-            e.preventDefault();
-            void submit();
-          }}
-        >
-          <h3 className="review-form-title">Worked with Ahmad? Leave a review</h3>
-          <p className="review-form-note">It shows up here right away — no account needed.</p>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            maxLength={80}
-            placeholder="Your name"
-            aria-label="Your name"
-            className="review-input"
-          />
-          <div className="review-picker">
-            <span>Your rating</span>
-            {[1, 2, 3, 4, 5].map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => setRating(n)}
-                aria-label={`${n} star${n > 1 ? "s" : ""}`}
-                className={`review-pick ${n <= rating ? "is-on" : ""}`}
-              >
-                ★
-              </button>
-            ))}
-          </div>
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            maxLength={500}
-            rows={3}
-            placeholder="How was working with Ahmad?"
-            aria-label="Your review"
-            className="review-input"
-          />
-          <div className="review-form-row">
-            <button type="submit" disabled={busy || !name.trim() || !message.trim()} className="review-submit">
-              {busy ? "Posting…" : "Post review"}
-            </button>
-            <span className="review-count">{message.length}/500</span>
-          </div>
-          {notice && <p className="review-notice">{notice}</p>}
-        </form>
+        {isAdmin && (
+          <p className="reviews-admin-link" data-reveal>
+            <a href="/admin#reviews">Post or manage reviews in admin →</a>
+          </p>
+        )}
       </div>
     </section>
   );

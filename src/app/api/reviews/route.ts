@@ -45,6 +45,10 @@ export async function POST(req: Request) {
   }
 
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  /* Posting is admin-only: the public form is gone, only /admin#reviews posts. */
+  if (!isAdminRequest(req)) {
+    return NextResponse.json({ error: "Admin only" }, { status: 401, headers: NO_STORE });
+  }
   if (rateLimited(ip)) {
     return NextResponse.json({ error: "Too many reviews — try again later" }, { status: 429, headers: NO_STORE });
   }
