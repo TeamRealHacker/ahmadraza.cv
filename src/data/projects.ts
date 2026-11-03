@@ -158,6 +158,25 @@ export const projects: Project[] = [
     featured: true,
     accent: "#3046e8",
   },
+  {
+    slug: "nook",
+    number: "08",
+    title: "Nook",
+    tagline: "Cozy notes & deep focus · Windows",
+    description:
+      "A small, fast Windows app for notes, focus sessions and study rooms — earn coins for real focus, raise a pixel pet and flex your stats with friends. Free forever and local-first, with notes mirrored to plain .md files.",
+    longDescription:
+      "Nook 1.6.2 is a small, fast Windows app for notes, focus sessions and study rooms. Notes link themselves together with Markdown, folders, tags, slash commands and wikilinks, every link shown as a backlink, every note mirrored to a plain .md file, with full-text search, version history and one-click restore. Focus sessions earn coins for real focus (checked on the server, so the leaderboard stays honest), 12 pixel pets to raise — including Mochi, who walks across the desktop — 13 mini games for breaks, and shareable animated flex cards. An AI reads your notes with your own key or fully offline, and a built-in MCP server exposes 26 tools to Claude, Cursor, VS Code and Codex. It plays nicely with Obsidian, Google Drive, Calendar and Tasks, Notion, GitHub issues, Todoist, Keep, webhooks and Discord presence, and runs on Windows 10 and 11 through WebView2, so it stays small and fast. Everything free today stays free; Nook Pro is on the way.",
+    highlights: ["Markdown notes with wikilinks & backlinks", "Focus sessions, coins, leaderboard & study rooms", "12 pixel pets & 13 mini games", "26 MCP tools for AI apps", "Local-first — notes mirrored to plain .md"],
+    image: "/images/nook.webp",
+    href: "https://nook-web-7cj.pages.dev/",
+    stack: ["Windows", "WebView2", "Local-first", "AI"],
+    year: "2026",
+    role: "Design & Build",
+    client: "Personal project",
+    featured: true,
+    accent: "#22c55e",
+  },
 ];
 
 export function getProject(slug: string) {
