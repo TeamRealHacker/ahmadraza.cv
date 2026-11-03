@@ -36,8 +36,11 @@ export async function GET() {
       );
     }
     const data = (await res.json()) as GitHubRepo[];
+    /* Only the top 4 by stars — Ahmad asked for no full list. */
     const repos = data
       .filter((r) => !r.fork)
+      .sort((a, b) => b.stargazers_count - a.stargazers_count)
+      .slice(0, 4)
       .map((r) => ({
         name: r.name,
         description: r.description,

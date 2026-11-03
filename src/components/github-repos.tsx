@@ -37,11 +37,13 @@ export function GithubRepos() {
     fetch("/api/github-repos")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d: Repo[]) => {
-        if (!cancelled && Array.isArray(d) && d.length) setRepos(d);
-        else if (!cancelled) { setRepos(FALLBACK_REPOS); setUsingFallback(true); }
+        if (!cancelled && Array.isArray(d) && d.length) {
+          /* Top 4 by stars, even if a cached API response predates the fix. */
+          setRepos([...d].sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0)).slice(0, 4));
+        } else if (!cancelled) { setRepos(FALLBACK_REPOS.slice(0, 4)); setUsingFallback(true); }
       })
       .catch(() => {
-        if (!cancelled) { setRepos(FALLBACK_REPOS); setUsingFallback(true); }
+        if (!cancelled) { setRepos(FALLBACK_REPOS.slice(0, 4)); setUsingFallback(true); }
       });
     return () => { cancelled = true; };
   }, []);
@@ -57,7 +59,7 @@ export function GithubRepos() {
           <div className="skeleton h-8 w-24 shrink-0 rounded-full" />
         </div>
         <ul className="grid gap-3 sm:grid-cols-2">
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: 4 }).map((_, i) => (
             <li key={i} className="rounded-2xl border border-line bg-card px-5 py-4" aria-hidden="true">
               <div className="skeleton h-5 w-1/2" />
               <div className="mt-3 skeleton h-4 w-full" />
@@ -90,7 +92,7 @@ export function GithubRepos() {
           <p className="text-sm text-muted">
             {usingFallback
               ? "Live list unavailable right now — showing a verified snapshot."
-              : "Public repositories, newest first."}
+              : "Top repositories by stars."}
           </p>
         </div>
         <a
