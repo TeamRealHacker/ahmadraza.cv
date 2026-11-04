@@ -7,6 +7,46 @@ import { PhoneFrame } from "./phone-frame";
 
 type Props = { projects?: Project[]; limit?: number; showMore?: boolean };
 
+function domainOf(href: string) {
+  try { return new URL(href).hostname.replace(/^www\./, ""); } catch { return ""; }
+}
+
+/** Project media: Kite sits in a phone; everything else in a slim browser frame. */
+function Media({ p, sizes, phoneSizes }: { p: Project; sizes: string; phoneSizes: string }) {
+  const alt = `${p.title} — ${p.tagline}`;
+  if (p.slug === "kite") {
+    return (
+      <div className="showcase-frame showcase-frame--phone">
+        <PhoneFrame>
+          <ProjectVideoFrame hover slug={p.slug} image={p.image} alt={alt} sizes={phoneSizes} />
+        </PhoneFrame>
+      </div>
+    );
+  }
+  const domain = p.href ? domainOf(p.href) : "";
+  return (
+    <div className="showcase-frame showcase-frame--browser">
+      <span className="showcase-chrome" aria-hidden="true">
+        <span className="showcase-chrome-dots"><i /><i /><i /></span>
+        {domain ? <span className="showcase-chrome-url">{domain}</span> : null}
+      </span>
+      <div className="showcase-screen">
+        <ProjectVideoFrame hover slug={p.slug} image={p.image} alt={alt} sizes={sizes} />
+      </div>
+    </div>
+  );
+}
+
+function Eyebrow({ p }: { p: Project }) {
+  return (
+    <p className="showcase-eyebrow">
+      {p.number ? <span className="showcase-num">{p.number}</span> : null}
+      <span className="showcase-eyebrow-sep" aria-hidden="true" />
+      <span>{p.year}</span>
+      {p.stack?.[0] ? <><span aria-hidden="true">·</span><span>{p.stack[0]}</span></> : null}
+    </p>
+  );
+}
 /**
  * Editorial project showcase: one full-width cinematic feature followed by
  * alternating split spreads. `limit` trims it for the home page, and
@@ -26,30 +66,12 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
         data-reveal
       >
         <Link href={`/work/${feature.slug}`} className="showcase-media" aria-label={`${feature.title} — view case study`}>
-          <div className={`showcase-frame ${feature.slug === "kite" ? "showcase-frame--phone" : ""}`}>
-            {feature.slug === "kite" ? (
-              <PhoneFrame>
-                <ProjectVideoFrame
-                  slug={feature.slug}
-                  image={feature.image}
-                  alt={`${feature.title} — ${feature.tagline}`}
-                  sizes="(max-width: 1024px) 80vw, 230px"
-                />
-              </PhoneFrame>
-            ) : (
-            <ProjectVideoFrame
-              slug={feature.slug}
-              image={feature.image}
-              alt={`${feature.title} — ${feature.tagline}`}
-              sizes="(max-width: 1024px) 100vw, 960px"
-            />
-            )}
-            <span className="showcase-accent" aria-hidden="true" />
-          </div>
+          <Media p={feature} sizes="(max-width: 1024px) 100vw, 960px" phoneSizes="(max-width: 1024px) 80vw, 230px" />
         </Link>
 
         <div className="showcase-feature-caption">
           <div>
+            <Eyebrow p={feature} />
             <h3>{feature.title}</h3>
             <p className="showcase-tagline">{feature.tagline}</p>
           </div>
@@ -74,29 +96,11 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
           data-reveal
         >
           <Link href={`/work/${p.slug}`} className="showcase-media" aria-label={`${p.title} — view case study`}>
-            <div className={`showcase-frame ${p.slug === "kite" ? "showcase-frame--phone" : ""}`}>
-              {p.slug === "kite" ? (
-                <PhoneFrame>
-                  <ProjectVideoFrame
-                    slug={p.slug}
-                    image={p.image}
-                    alt={`${p.title} — ${p.tagline}`}
-                    sizes="(max-width: 820px) 80vw, 230px"
-                  />
-                </PhoneFrame>
-              ) : (
-              <ProjectVideoFrame
-                slug={p.slug}
-                image={p.image}
-                alt={`${p.title} — ${p.tagline}`}
-                sizes="(max-width: 820px) 100vw, 560px"
-              />
-              )}
-                <span className="showcase-accent" aria-hidden="true" />
-            </div>
+            <Media p={p} sizes="(max-width: 820px) 100vw, 520px" phoneSizes="(max-width: 820px) 80vw, 230px" />
           </Link>
 
           <div className="showcase-info">
+            <Eyebrow p={p} />
             <h3 className="showcase-title">{p.title}</h3>
             <p className="showcase-tagline">{p.tagline}</p>
             <div className="showcase-links">

@@ -5,11 +5,15 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import { m, useScroll, useTransform } from "framer-motion";
 import { Stars } from "./stars";
-import { site } from "@/data/site";
 import { SKIES, type SkyId } from "@/data/skies";
 import { SKY_EVENT, getSkyTheme, setSkyTheme } from "@/lib/sky";
 
 const HEADING = "I Work For Real !!";
+const WORDS = HEADING.split(" ").reduce<{ word: string; start: number }[]>((acc, word) => {
+  const prev = acc[acc.length - 1];
+  acc.push({ word, start: prev ? prev.start + prev.word.length + 1 : 0 });
+  return acc;
+}, []);
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,6 +42,7 @@ export function Hero() {
     <section aria-label="Introduction" className="px-3 pt-3 sm:px-5" ref={ref}>
       <div className="hero-shell relative mx-auto max-w-5xl overflow-hidden">
         <m.div style={{ y, scale }} className="absolute inset-0">
+          <div className="hero-zoom absolute inset-0">
           <Image
             key={`${sky}-desktop`}
             src={`/images/real-${sky}-desktop.webp`}
@@ -59,6 +64,7 @@ export function Hero() {
             sizes="100vw"
             className="hero-img hero-img-mobile object-cover"
           />
+          </div>
         </m.div>
 
         <div className="hero-wash" aria-hidden="true" />
@@ -66,24 +72,27 @@ export function Hero() {
           <Stars density={0.05} color="#fff6e6" shooting shootingColor="#fff1cd" />
         </div>
 
-        <span className="hero-side" aria-hidden="true">{site.name.split(" ")[0]}</span>
-
-        <div className="relative z-10 flex h-full items-center justify-center px-12 sm:px-20">
+        <div className="hero-copy relative z-10 flex h-full flex-col items-center justify-center px-12 sm:px-20">
           <h1
             aria-label={HEADING}
-            className="pixel-title hero-title text-center text-[clamp(1.9rem,8vw,5.2rem)] leading-none"
+            className="hero-title text-center"
           >
-            {HEADING.split("").map((ch, i) => (
-              <span
-                key={i}
-                aria-hidden="true"
-                className="char-in"
-                style={{ animationDelay: `${100 + i * 42}ms`, whiteSpace: "pre" }}
-              >
-                {ch}
+            {/* Letters animate one by one, but each word stays unbreakable
+                so the line never wraps mid-word on narrow screens. */}
+            {WORDS.map(({ word, start }) => (
+              <span key={start} className="hero-word">
+                {word.split("").map((ch, j) => (
+                  <span key={j} aria-hidden="true" className="char-in" style={{ animationDelay: `${100 + (start + j) * 42}ms` }}>
+                    {ch}
+                  </span>
+                ))}
               </span>
             ))}
           </h1>
+          <p className="hero-sub">
+            <span className="hero-sub-dot" aria-hidden="true" />
+            Websites, AI tools &amp; apps<span className="hero-sub-tail"> <span className="hero-sub-sep" aria-hidden="true">/</span> built in Faisalabad</span>
+          </p>
         </div>
 
         {/* Minimal sky control: five colour dots + the active sky's name.
@@ -105,7 +114,6 @@ export function Hero() {
               </button>
             ))}
           </div>
-          <span className="sky-mini-sep" aria-hidden="true" />
           <span className="sky-mini-label" aria-live="polite">{active.label}</span>
         </div>
       </div>

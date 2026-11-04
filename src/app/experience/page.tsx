@@ -34,9 +34,7 @@ export default function ExperiencePage() {
         <section className="projects-section">
           <div className="projects-head" data-reveal>
             <div className="work-head">
-              <h1 className="work-head-title work-head-title--sm">
-                Exper<em>ience</em>
-              </h1>
+              <h1 className="work-head-title">Experience</h1>
               <p className="work-head-note">Every place, client and collaboration — all in one place.</p>
             </div>
           </div>

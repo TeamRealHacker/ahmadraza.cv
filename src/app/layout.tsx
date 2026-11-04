@@ -1,27 +1,54 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
+import { Instrument_Serif } from "next/font/google";
 import localFont from "next/font/local";
-import { GeistSans } from "geist/font/sans";
 import { Providers } from "@/components/providers";
 import { MenuNotch } from "@/components/menu-notch";
 import { themeInitScript } from "@/lib/theme";
 import { site } from "@/data/site";
 import "./globals.css";
+import "./polish.css";
+import "./r3.css";
 
-const pixel = localFont({
-  src: "../fonts/pixelify.woff2",
-  variable: "--font-pixelify",
-  weight: "400 700",
+/* Type system (self-hosted, Fontshare, free for commercial use):
+   - Clash Display: display face for the banner, names, headings, AR mark.
+   - Satoshi: body copy, navigation, buttons, small meta.
+   - Instrument Serif italic: sparing accent words inside headings. */
+const display = localFont({
+  src: [
+    { path: "../fonts/ClashDisplay-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/ClashDisplay-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-clash",
   display: "swap",
-  preload: true,
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
 });
 
-const hand = localFont({
-  src: "../fonts/handwriting.woff2",
-  variable: "--font-hand",
-  weight: "600",
+const sans = localFont({
+  src: [
+    { path: "../fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
+const serif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
   display: "swap",
 });
+
+/* Ultra-minimal first-visit intro. Runs before paint: it only flags <html>
+   when this tab hasn't seen the intro yet and motion is allowed. The overlay
+   itself is pure CSS and fades itself out, so it can never block content,
+   even if JavaScript fails after this line. */
+const introScript = `try{if(!sessionStorage.getItem('ar-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.setAttribute('data-intro','');sessionStorage.setItem('ar-intro','1');setTimeout(function(){document.documentElement.removeAttribute('data-intro')},3000)}}catch(e){}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -59,18 +86,23 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f2ee" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0b0d" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f5f2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0c" },
   ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${pixel.variable} ${hand.variable} dark`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${display.variable} ${serif.variable} dark`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
       </head>
       <body className="min-h-screen font-sans">
+        <div className="intro" aria-hidden="true">
+          <span className="intro-mark">Ahmad Raza</span>
+          <span className="intro-track"><span className="intro-fill" /></span>
+        </div>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[110] focus:rounded-full focus:bg-fg focus:px-4 focus:py-2 focus:text-sm focus:text-bg"
@@ -78,7 +110,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         <Providers>
-          <header className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-3 sm:px-4">
+          <header className="site-top pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center px-3 sm:top-5 sm:px-6">
             <MenuNotch />
           </header>
           {children}

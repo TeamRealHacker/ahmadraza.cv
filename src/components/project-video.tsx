@@ -36,6 +36,9 @@ type AutoVideoProps = {
   controls?: boolean;
   onExpand?: () => void;
   showRec?: boolean;
+  /** Keep the video invisible until real frames are playing, so the
+   *  screenshot underneath is what shows while it loads or buffers. */
+  revealOnPlay?: boolean;
   children?: ReactNode;
 };
 
@@ -46,7 +49,7 @@ type AutoVideoProps = {
  *
  * Lazy by design: no video bytes are fetched until the player is near the
  * viewport (IntersectionObserver, 400px margin). Until then the poster shows
- * with a small loading indicator, so offscreen recordings (the tour, every
+ * (the project's real screenshot), so offscreen recordings (the tour, every
  * project below the fold) cost nothing on first paint.
  */
 export function AutoVideo({
@@ -56,12 +59,13 @@ export function AutoVideo({
   controls = false,
   onExpand,
   showRec = false,
+  revealOnPlay = false,
   children,
 }: AutoVideoProps) {
   const targetRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [inView, setInView] = useState(false);
-  const [canPlay, setCanPlay] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     const el = targetRef.current;
@@ -115,7 +119,6 @@ export function AutoVideo({
           className={className}
           loading="lazy"
         />
-        <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>
         {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
         {children}
         {expand}
@@ -127,7 +130,13 @@ export function AutoVideo({
     <>
       <video
         ref={(el) => { videoRef.current = el; targetRef.current = el; }}
-        className={className}
+        className={revealOnPlay ? `${className} ar-video-reveal${playing ? " is-playing" : ""}` : className}
+        onTimeUpdate={revealOnPlay ? (e) => {
+          const v = e.currentTarget;
+          // On each loop, skip the recording's dark lead-in.
+          if (v.currentTime < startAt - 0.05) { v.currentTime = startAt; return; }
+          if (!playing && v.currentTime >= startAt + 0.4) setPlaying(true);
+        } : undefined}
         src={`${video.src}#t=${startAt}`}
         poster={video.poster}
         autoPlay
@@ -137,11 +146,8 @@ export function AutoVideo({
         controls={controls}
         preload="metadata"
         disablePictureInPicture
-        onCanPlay={() => setCanPlay(true)}
-        onLoadedData={() => setCanPlay(true)}
         aria-label={`${video.title} — recorded preview, playing automatically`}
       />
-      {!canPlay && <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>}
       {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
       {children}
       {expand}
@@ -160,6 +166,7 @@ export function ProjectVideoFrame({
   sizes,
   priority = false,
   startAt = 1.2,
+  hover = false,
 }: {
   slug: string;
   image: string;
@@ -167,12 +174,80 @@ export function ProjectVideoFrame({
   sizes: string;
   priority?: boolean;
   startAt?: number;
+  /** Cards: show the screenshot, play the recording only while hovered. */
+  hover?: boolean;
 }) {
   const video: ProjectVideo | undefined = projectVideo(slug);
-  if (!video) {
-    return <Image src={image} alt={alt} fill sizes={sizes} priority={priority} className="object-cover object-top" />;
+  const still = <Image src={image} alt={alt} fill sizes={sizes} priority={priority} className="object-cover object-top" />;
+  if (!video) return still;
+  if (hover) {
+    return (
+      <>
+        {still}
+        <HoverVideo video={video} startAt={startAt} />
+      </>
+    );
   }
-  return <AutoVideo video={video} startAt={startAt} />;
+  /* The real screenshot is always painted first; the recording fades in on
+     top only once it is actually playing. */
+  return (
+    <>
+      {still}
+      <AutoVideo video={video} startAt={startAt} revealOnPlay />
+    </>
+  );
+}
+
+/**
+ * A recording that stays dormant (no bytes fetched) until the card it sits in
+ * is hovered on a pointer device, then fades in over the screenshot and
+ * pauses again on leave. Touch devices simply keep the real screenshot.
+ */
+function HoverVideo({ video, startAt }: { video: ProjectVideo; startAt: number }) {
+  const ref = useRef<HTMLVideoElement | null>(null);
+  const [armed, setArmed] = useState(false);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const v = ref.current;
+    const host = v?.closest("a, article") as HTMLElement | null;
+    if (!v || !host) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const enter = () => {
+      setArmed(true);
+      v.muted = true;
+      const p = v.play();
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    };
+    const leave = () => { v.pause(); setPlaying(false); };
+    host.addEventListener("pointerenter", enter);
+    host.addEventListener("pointerleave", leave);
+    return () => {
+      host.removeEventListener("pointerenter", enter);
+      host.removeEventListener("pointerleave", leave);
+    };
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      className={`ar-video-fill ar-video-reveal${playing ? " is-playing" : ""}`}
+      src={armed ? `${video.src}#t=${startAt}` : undefined}
+      muted
+      loop
+      playsInline
+      preload="none"
+      disablePictureInPicture
+      aria-hidden="true"
+      tabIndex={-1}
+      onTimeUpdate={(e) => {
+        const v = e.currentTarget;
+        if (v.currentTime < startAt - 0.05) { v.currentTime = startAt; return; }
+        if (!playing && !v.paused && v.currentTime >= startAt + 0.3) setPlaying(true);
+      }}
+    />
+  );
 }
 
 type Props = { slug: string; variant?: "button" | "card" };
