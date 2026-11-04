@@ -35,22 +35,22 @@ export default async function HomePage() {
     <>
       <main id="main">
         <Hero />
-        <div className="mx-auto max-w-5xl px-5 pt-4 sm:px-8" data-reveal>
+        <ProfileHeader />
+        <div className="home-graph mx-auto max-w-5xl px-5 sm:px-8" data-reveal>
           <GithubGraph />
         </div>
-        <ProfileHeader />
         <Projects projects={allProjects} />
-        <section aria-label="Experience" className="mx-auto max-w-5xl px-5 sm:px-8" data-reveal>
+        <section aria-label="Experience" className="home-exp mx-auto max-w-5xl px-5 sm:px-8" data-reveal>
           <Link
             href="/experience"
-            className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-card px-5 py-5 transition hover:-translate-y-0.5"
+            className="flex flex-wrap items-center justify-between gap-4 surface surface-hover rounded-3xl px-6 py-6 sm:px-8 sm:py-7"
           >
             <span>
-              <span className="text-xs uppercase tracking-[0.16em] text-muted">Where I&apos;ve worked</span>
-              <span className="mt-1 block text-xl font-semibold">Experience</span>
-              <span className="mt-1 block text-sm text-muted">Team RealHackers · WASA, Faisalabad · Minal Enterprises</span>
+              <span className="text-[13px] text-muted">Where I&apos;ve worked</span>
+              <span className="mt-1.5 block text-2xl font-semibold tracking-[-0.025em]">Experience</span>
+              <span className="mt-2 block text-sm text-muted">Team RealHackers · WASA, Faisalabad · Minal Enterprises</span>
             </span>
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs">
+            <span className="inline-flex shrink-0 items-center gap-1 chip">
               See full experience <ArrowUpRight size={12} />
             </span>
           </Link>

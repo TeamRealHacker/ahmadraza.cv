@@ -13,7 +13,6 @@ export function Projects({ projects }: { projects: Project[] }) {
           <h2 id="projects-title" className="work-head-title work-head-title--sm">
             Things I&apos;ve <em>shipped</em>
           </h2>
-          <div className="work-head-rule" aria-hidden="true"><span /><span /><span /><span /><span /><i /></div>
           <p className="work-head-note">A few things I designed, built and actually put out into the world.</p>
         </div>
         <Link href="/work" className="projects-all">

@@ -66,11 +66,11 @@ export function GithubGraph() {
   const height = 7 * (CELL + GAP) + 16;
 
   return (
-    <div ref={boxRef} aria-busy={state.status === "loading"} className="min-w-0 overflow-hidden rounded-2xl border border-line bg-card px-5 py-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
+    <div ref={boxRef} aria-busy={state.status === "loading"} className="min-w-0 overflow-hidden surface rounded-3xl px-6 py-5 sm:px-7 sm:py-6">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-sm font-medium">GitHub activity</h3>
-          <p className="text-xs text-muted">
+          <h3 className="text-[15px] font-medium tracking-[-0.01em]">GitHub activity</h3>
+          <p className="mt-1 text-xs text-muted">
             {state.status === "ready"
               ? `${state.total.toLocaleString()} contributions in the last year`
               : state.status === "error"
@@ -82,7 +82,7 @@ export function GithubGraph() {
           href={`https://github.com/${site.handle}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs transition-colors hover:bg-fg/[0.07]"
+          className="inline-flex items-center gap-1 chip transition-colors hover:bg-fg/[0.07]"
         >
           @{site.handle} <ArrowUpRight size={12} />
         </a>
@@ -94,7 +94,7 @@ export function GithubGraph() {
             role="img"
             aria-label={`GitHub contribution graph for ${site.handle}`}
             viewBox={`0 0 ${width} ${height}`}
-            className="min-w-[640px] text-fg"
+            className="min-w-[640px] text-[var(--sky-ink)]"
             width="100%"
           >
             {months.map((mo) => (

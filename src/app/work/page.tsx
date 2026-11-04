@@ -20,12 +20,9 @@ export default async function WorkPage() {
         <header className="work-page-head" data-reveal>
           <div className="work-head work-head--lg">
             <h1 className="work-head-title">Things I&apos;ve <em>shipped</em></h1>
-            <div className="work-head-rule" aria-hidden="true"><span /><span /><span /><span /><span /><i /></div>
-            <div className="work-head-foot">
-              <p className="work-head-note">
-                Web products, AI tools, client builds and a mobile app — designed and shipped end to end.
-              </p>
-            </div>
+            <p className="work-head-note">
+              Web products, AI tools, client builds and a mobile app — designed and shipped end to end.
+            </p>
           </div>
         </header>
         <ProjectShowcase projects={allProjects} />

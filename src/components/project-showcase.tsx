@@ -30,6 +30,7 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
             {feature.slug === "kite" ? (
               <PhoneFrame>
                 <ProjectVideoFrame
+                  hover
                   slug={feature.slug}
                   image={feature.image}
                   alt={`${feature.title} — ${feature.tagline}`}
@@ -38,13 +39,13 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
               </PhoneFrame>
             ) : (
             <ProjectVideoFrame
+                  hover
               slug={feature.slug}
               image={feature.image}
               alt={`${feature.title} — ${feature.tagline}`}
               sizes="(max-width: 1024px) 100vw, 960px"
             />
             )}
-            <span className="showcase-accent" aria-hidden="true" />
           </div>
         </Link>
 
@@ -78,6 +79,7 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
               {p.slug === "kite" ? (
                 <PhoneFrame>
                   <ProjectVideoFrame
+                  hover
                     slug={p.slug}
                     image={p.image}
                     alt={`${p.title} — ${p.tagline}`}
@@ -86,14 +88,14 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
                 </PhoneFrame>
               ) : (
               <ProjectVideoFrame
+                  hover
                 slug={p.slug}
                 image={p.image}
                 alt={`${p.title} — ${p.tagline}`}
                 sizes="(max-width: 820px) 100vw, 560px"
               />
               )}
-                <span className="showcase-accent" aria-hidden="true" />
-            </div>
+                </div>
           </Link>
 
           <div className="showcase-info">
