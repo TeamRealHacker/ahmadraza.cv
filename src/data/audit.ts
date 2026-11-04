@@ -8,6 +8,7 @@ export const PUBLIC_ROUTES = [
   { path: "/about", label: "About" },
   { path: "/work", label: "Work" },
   { path: "/life", label: "Life" },
+  { path: "/experience", label: "Experience" },
   ...projects.map((p) => ({ path: `/work/${p.slug}`, label: p.title })),
 ] as { path: string; label: string }[];
 

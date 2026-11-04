@@ -8,7 +8,6 @@ import { ArrowRight, ArrowUpRight, Check, Copy, Mail, MapPin } from "lucide-reac
 import { Stars } from "./stars";
 import { PakistanFlag, SocialIcon } from "./icons";
 import { site } from "@/data/site";
-import { EXPERIENCE } from "@/data/experience";
 import { projects } from "@/data/projects";
 import { SKIES, SKY_STORAGE_KEY } from "@/data/skies";
 import { SKY_EVENT, isValidSky } from "@/lib/sky";
@@ -213,76 +212,6 @@ export function AboutContent() {
             ))}
           </div>
         </div>
-
-        <section className="about-skills" data-reveal>
-          <div className="about-section-head">
-            <span className="about-step-node" aria-hidden="true">04</span>
-            <div>
-              <p className="about-step-kicker">The everyday kit</p>
-              <h2>Toolbox</h2>
-            </div>
-          </div>
-          <ul className="about-skill-grid">
-            {site.skills.map((skill, i) => (
-              <li key={skill}>
-                <span className="about-skill-num">{String(i + 1).padStart(2, "0")}</span>
-                <span>{skill}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="about-socials" data-reveal>
-          <div className="about-section-head">
-            <span className="about-step-node" aria-hidden="true">05</span>
-            <div>
-              <p className="about-step-kicker">Find me elsewhere</p>
-              <h2>Elsewhere</h2>
-            </div>
-          </div>
-          <ul className="about-social-grid" aria-label="Social links">
-            {site.socials.map((s) => (
-              <li key={s.label}>
-                <a
-                  href={s.href}
-                  target={s.href.startsWith("http") ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                >
-                  <SocialIcon name={s.icon} width={16} height={16} />
-                  <span>{s.label}</span>
-                  <ArrowUpRight size={14} className="about-social-arrow" />
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        <section className="about-skills" data-reveal>
-          <div className="about-section-head">
-            <span className="about-step-node" aria-hidden="true">06</span>
-            <div>
-              <p className="about-step-kicker">Where I&apos;ve worked</p>
-              <h2>Experience</h2>
-            </div>
-          </div>
-          <ul className="about-skill-grid">
-            {EXPERIENCE.map((e) => (
-              <li key={e.org}>
-                <span className="about-skill-num">{e.period ?? "—"}</span>
-                <span>
-                  <strong>{e.org}</strong> — {e.role}
-                  <br />
-                  <small>{e.location}{e.sector ? ` · ${e.sector}` : ""}</small>
-                  <br />
-                  <small>{e.note}</small>
-                </span>
-              </li>
-            ))}
-          </ul>
-          <p className="about-muted" style={{ marginTop: 12, fontSize: 13, opacity: 0.75 }}>
-            Roles and dates for WASA and Minal Enterprises to be added — Ahmad hasn&apos;t shared them yet.
-          </p>
-        </section>
 
         <div className="about-signoff" data-reveal aria-hidden="true">
           <span className="about-signoff-rule" />

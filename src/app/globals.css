@@ -1468,3 +1468,20 @@ body:has(.admin-locked) :is(.site-nav, .theme-float, .theme-ring, .theme-note, .
   .reviews-summary { padding: 16px 18px; }
   .review-form { padding: 18px; }
 }
+
+/* ---- Experience page: full-width rows, period as a pill, no vertical strips ---- */
+.exp-list { list-style: none; padding: 0; margin: 8px auto 0; max-width: 64rem; display: grid; gap: 16px; }
+.exp-card { display: grid; grid-template-columns: 190px 1fr; gap: 24px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.exp-card:hover { transform: translateY(-3px); box-shadow: 0 18px 34px -20px rgba(0,0,0,.45); }
+.exp-meta { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.exp-period { display: inline-block; background: var(--fg); color: var(--bg); border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.exp-period--muted { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+.exp-location { color: var(--muted); font-size: 13px; }
+.exp-org { margin: 0; font-size: clamp(22px, 3vw, 28px); letter-spacing: -0.01em; }
+.exp-role { margin: 6px 0 0; font-size: 15px; font-weight: 550; }
+.exp-note { margin: 8px 0 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.exp-sector { margin: 10px 0 0; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+.exp-footnote { text-align: center; color: var(--muted); font-size: 13px; margin: 28px 0 0; }
+@media (max-width: 640px) {
+  .exp-card { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
+}

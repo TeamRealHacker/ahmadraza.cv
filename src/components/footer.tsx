@@ -27,6 +27,7 @@ export function Footer() {
             <Link href="/work">Work</Link>
             <Link href="/life">Life</Link>
             <Link href="/about">About</Link>
+            <Link href="/experience">Experience</Link>
           </nav>
           <p className="footer-signature">
             <span>— Ahmad</span> <PakistanFlag size={14} /> <em>Faisalabad, Pakistan</em>

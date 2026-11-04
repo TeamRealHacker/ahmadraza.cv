@@ -11,6 +11,7 @@ const links = [
   { href: "/work", label: "Work", match: "/work" },
   { href: "/life", label: "Life", match: "/life" },
   { href: "/about", label: "About", match: "/about" },
+  { href: "/experience", label: "Experience", match: "/experience" },
 ];
 
 export function Navbar() {
