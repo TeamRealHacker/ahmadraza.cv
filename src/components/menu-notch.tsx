@@ -60,6 +60,7 @@ export function MenuNotch() {
   const panelId = React.useId();
   const [open, setOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
+  const [hovered, setHovered] = React.useState<string | null>(null);
 
   const isActive = (l: NavLink) => (l.match === "/" ? pathname === "/" : pathname.startsWith(l.match));
 
@@ -98,13 +99,31 @@ export function MenuNotch() {
           <span className="nav-name">{site.name}</span>
         </Link>
 
-        <ul className="nav-links">
+        <ul className="nav-links" onMouseLeave={() => setHovered(null)}>
           {LINKS.map((l) => {
             const active = isActive(l);
+            /* One pill slides between links: it follows the hovered link,
+               and rests on the current page otherwise. */
+            const showPill = hovered ? hovered === l.href : active;
             return (
               <li key={l.href}>
-                <Link href={l.href} aria-current={active ? "page" : undefined} className={cx("nav-link", active && "is-active")}>
-                  {l.label}
+                <Link
+                  href={l.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cx("nav-link", active && "is-active")}
+                  onMouseEnter={() => setHovered(l.href)}
+                  onFocus={() => setHovered(l.href)}
+                  onBlur={() => setHovered(null)}
+                >
+                  {showPill && (
+                    <m.span
+                      layoutId="nav-pill"
+                      className={cx("nav-pill", !active && "is-hover")}
+                      transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 36, mass: 0.7 }}
+                      aria-hidden
+                    />
+                  )}
+                  <span className="nav-link-text">{l.label}</span>
                 </Link>
               </li>
             );

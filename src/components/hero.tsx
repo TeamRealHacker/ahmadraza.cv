@@ -42,6 +42,7 @@ export function Hero() {
     <section aria-label="Introduction" className="px-3 pt-3 sm:px-5" ref={ref}>
       <div className="hero-shell relative mx-auto max-w-5xl overflow-hidden">
         <m.div style={{ y, scale }} className="absolute inset-0">
+          <div className="hero-zoom absolute inset-0">
           <Image
             key={`${sky}-desktop`}
             src={`/images/real-${sky}-desktop.webp`}
@@ -63,6 +64,7 @@ export function Hero() {
             sizes="100vw"
             className="hero-img hero-img-mobile object-cover"
           />
+          </div>
         </m.div>
 
         <div className="hero-wash" aria-hidden="true" />
@@ -70,7 +72,7 @@ export function Hero() {
           <Stars density={0.05} color="#fff6e6" shooting shootingColor="#fff1cd" />
         </div>
 
-        <div className="relative z-10 flex h-full items-center justify-center px-12 sm:px-20">
+        <div className="hero-copy relative z-10 flex h-full flex-col items-center justify-center px-12 sm:px-20">
           <h1
             aria-label={HEADING}
             className="hero-title text-center"
@@ -87,6 +89,10 @@ export function Hero() {
               </span>
             ))}
           </h1>
+          <p className="hero-sub">
+            <span className="hero-sub-dot" aria-hidden="true" />
+            Websites, AI tools &amp; apps<span className="hero-sub-tail"> <span className="hero-sub-sep" aria-hidden="true">/</span> built in Faisalabad</span>
+          </p>
         </div>
 
         {/* Minimal sky control: five colour dots + the active sky's name.

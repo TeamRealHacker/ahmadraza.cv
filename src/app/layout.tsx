@@ -8,6 +8,7 @@ import { themeInitScript } from "@/lib/theme";
 import { site } from "@/data/site";
 import "./globals.css";
 import "./polish.css";
+import "./r3.css";
 
 /* Type system (self-hosted, Fontshare, free for commercial use):
    - Clash Display: display face for the banner, names, headings, AR mark.
