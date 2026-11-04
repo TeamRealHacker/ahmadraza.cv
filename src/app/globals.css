@@ -1485,3 +1485,11 @@ body:has(.admin-locked) :is(.site-nav, .theme-float, .theme-ring, .theme-note, .
 @media (max-width: 640px) {
   .exp-card { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
 }
+
+/* ---- Cookie consent banner: centered floating card, corners stay free ---- */
+.cookie-banner { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 90; width: min(560px, calc(100vw - 32px)); display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 16px 20px; box-shadow: 0 18px 40px -18px rgba(0,0,0,.5); }
+.cookie-banner-text { margin: 0; flex: 1 1 280px; font-size: 13px; line-height: 1.55; color: var(--muted); }
+.cookie-banner-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.cookie-banner-accept { padding: 9px 20px; border-radius: 999px; border: none; background: var(--fg); color: var(--bg); font-size: 14px; font-weight: 550; cursor: pointer; }
+.cookie-banner-decline { padding: 9px 18px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--fg); font-size: 14px; cursor: pointer; }
+.cookie-banner-accept:hover, .cookie-banner-decline:hover { transform: translateY(-1px); }
