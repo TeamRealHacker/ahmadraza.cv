@@ -116,7 +116,6 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
       {showMore && remaining.length > 0 && (
         <div className="showcase-more" data-reveal>
           <div className="showcase-more-head">
-            <p className="showcase-eyebrow">More projects on the work page</p>
             <Link href="/work" className="showcase-more-cta">
               View all projects <ArrowRight size={20} />
             </Link>

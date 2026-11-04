@@ -1509,3 +1509,7 @@ body:has(.admin-locked) :is(.site-nav, .theme-float, .theme-ring, .theme-note, .
 .showcase-frame--phone .phone-wrap { padding: 0; }
 .showcase-frame--phone .phone-frame { width: min(230px, 78vw); }
 .showcase-frame--phone .phone-caption { display: none; }
+
+/* ---- MenuNotch (centered pill nav) ---- */
+.menu-notch-link { color: var(--muted); }
+.menu-notch-link-active { color: var(--fg); font-weight: 600; }

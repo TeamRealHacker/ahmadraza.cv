@@ -136,7 +136,6 @@ export function LifeContent({
         <span className="about-hero-side" aria-hidden="true">{site.name}</span>
 
         <div className="about-hero-inner life-hero-inner">
-          <p className="about-eyebrow">Life <span aria-hidden="true">/</span> 02</p>
           <h1 className="about-name life-name" aria-label={TITLE}>
             {TITLE.split("").map((ch, i) => (
               <span

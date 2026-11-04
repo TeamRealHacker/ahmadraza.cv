@@ -6,7 +6,6 @@ import { CrownCursor } from "./crown-cursor";
 import { ContextMenu } from "./context-menu";
 import { BackToTop } from "./back-to-top";
 import { ScrollReveal } from "./scroll-reveal";
-import { ThemeToggle } from "./theme-toggle";
 import { CookieConsent } from "./cookie-consent";
 import { SkyAmbient } from "./sky-ambient";
 import { VaultSignal } from "./vault-signal";
@@ -21,7 +20,6 @@ export function Providers({ children }: { children: ReactNode }) {
         <ScrollReveal />
         {children}
         <BackToTop />
-        <ThemeToggle />
         <CookieConsent />
         <CrownCursor />
         <ContextMenu />

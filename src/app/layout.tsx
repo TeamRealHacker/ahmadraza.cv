@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
 import { Providers } from "@/components/providers";
-import { Navbar } from "@/components/navbar";
+import { MenuNotch } from "@/components/menu-notch";
 import { themeInitScript } from "@/lib/theme";
 import { site } from "@/data/site";
 import "./globals.css";
@@ -78,7 +78,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         <Providers>
-          <Navbar />
+          <header className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-3 sm:px-4">
+            <MenuNotch />
+          </header>
           {children}
         </Providers>
       </body>

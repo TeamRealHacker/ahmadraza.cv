@@ -34,7 +34,6 @@ export default function ExperiencePage() {
         <section className="projects-section">
           <div className="projects-head" data-reveal>
             <div className="work-head">
-              <p className="work-head-kicker"><span className="work-head-bar" aria-hidden="true" /> Where I&apos;ve worked</p>
               <h1 className="work-head-title work-head-title--sm">
                 Exper<em>ience</em>
               </h1>

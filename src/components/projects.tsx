@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PakistanFlag } from "./icons";
 import { ProjectShowcase } from "./project-showcase";
 import type { Project } from "@/data/projects";
 
@@ -11,7 +10,6 @@ export function Projects({ projects }: { projects: Project[] }) {
     <section id="projects" aria-labelledby="projects-title" className="projects-section">
       <div className="projects-head" data-reveal>
         <div className="work-head">
-          <p className="work-head-kicker"><span className="work-head-bar" aria-hidden="true" /> Selected work <PakistanFlag size={14} className="work-head-flag" /></p>
           <h2 id="projects-title" className="work-head-title work-head-title--sm">
             Things I&apos;ve <em>shipped</em>
           </h2>

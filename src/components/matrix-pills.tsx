@@ -36,7 +36,6 @@ export function MatrixPills() {
         <span className="pill-hotspot-label">Red · Life</span>
       </Link>
 
-      <p className="pill-hint">Pick a hand</p>
     </div>
   );
 }

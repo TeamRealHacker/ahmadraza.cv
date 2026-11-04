@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Footer } from "@/components/footer";
 import { ProjectShowcase } from "@/components/project-showcase";
-import { PakistanFlag } from "@/components/icons";
 import { getProjects } from "@/lib/projects-store";
 
 /* Projects can be published from the admin console at runtime. */
@@ -20,7 +19,6 @@ export default async function WorkPage() {
       <main id="main" className="work-page">
         <header className="work-page-head" data-reveal>
           <div className="work-head work-head--lg">
-            <p className="work-head-kicker"><span className="work-head-bar" aria-hidden="true" /> Full archive <PakistanFlag size={14} className="work-head-flag" /></p>
             <h1 className="work-head-title">Things I&apos;ve <em>shipped</em></h1>
             <div className="work-head-rule" aria-hidden="true"><span /><span /><span /><span /><span /><i /></div>
             <div className="work-head-foot">

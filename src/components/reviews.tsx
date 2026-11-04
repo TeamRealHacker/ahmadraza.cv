@@ -74,7 +74,6 @@ export function Reviews() {
     <section aria-labelledby="reviews-title" className="projects-section">
       <div className="projects-head" data-reveal>
         <div className="work-head">
-          <p className="work-head-kicker"><span className="work-head-bar" aria-hidden="true" /> Reviews</p>
           <h2 id="reviews-title" className="work-head-title work-head-title--sm">
             What people <em>say</em>
           </h2>

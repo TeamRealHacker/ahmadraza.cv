@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Check, Copy, Mail, MapPin } from "lucide-react";
 import { Stars } from "./stars";
-import { PakistanFlag, SocialIcon } from "./icons";
+import { SocialIcon } from "./icons";
 import { site } from "@/data/site";
 import { projects } from "@/data/projects";
 import { SKIES, SKY_STORAGE_KEY } from "@/data/skies";
@@ -135,7 +135,6 @@ export function AboutContent() {
         <span className="about-hero-side" aria-hidden="true">{site.name}</span>
 
         <div className="about-hero-inner">
-          <p className="about-eyebrow">About <span aria-hidden="true">/</span> 01</p>
           <h1 className="about-name" aria-label={site.name}>
             {site.name.split("").map((ch, i) => (
               <span
@@ -195,7 +194,7 @@ export function AboutContent() {
               <span className="about-portrait-tag">@{site.handle}</span>
             </div>
             <figcaption>
-              <MapPin size={13} /> {site.location} <PakistanFlag size={14} />
+              <MapPin size={13} /> {site.location}
             </figcaption>
           </figure>
 

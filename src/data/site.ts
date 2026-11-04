@@ -12,7 +12,7 @@ export const site = {
   description:
     "Ahmad Raza is a self-taught developer and designer from Faisalabad building premium websites, AI tools, software and automation systems. Selected projects and open source.",
   bio: "Founder & Developer at RealHackers. I build premium websites, AI-powered tools, software, automation systems and digital products. Self-taught, obsessed with details, performance and things that just work.",
-  location: "Faisalabad, Punjab, Pakistan",
+  location: "Faisalabad, Punjab",
   email: "hello@ahmadraza.cv",
   tagline: "Turning ambitious ideas into working products.",
   education: "Matriculation (Computer Science) → ICS → Self-Taught Software Developer & Technology Practitioner",

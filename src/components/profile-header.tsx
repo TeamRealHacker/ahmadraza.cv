@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Globe, Mail, MapPin } from "lucide-react";
-import { GithubIcon, PakistanFlag } from "./icons";
+import { GithubIcon } from "./icons";
 import { site } from "@/data/site";
 import { projects } from "@/data/projects";
 
@@ -24,11 +24,6 @@ export function ProfileHeader() {
         </div>
 
         <div className="profile-main">
-          <p className="profile-kicker">
-            <span className="profile-kicker-line" aria-hidden="true" />
-            Who&apos;s behind this
-            <PakistanFlag size={14} className="profile-kicker-flag" />
-          </p>
 
           <h2 id="profile-name" className="profile-name">{site.name}</h2>
           <p className="profile-handle">@{site.handle} <span aria-hidden="true">/</span> {site.role}</p>
@@ -54,7 +49,6 @@ export function ProfileHeader() {
       <div className="profile-foot">
         <ul className="profile-meta">
           <li><MapPin size={13} /> {site.location}</li>
-          <li><PakistanFlag size={17} /> Pakistan</li>
           <li><Globe size={13} /><a href={site.url} className="hover:text-fg">{site.domain}</a></li>
         </ul>
         <dl className="profile-stats">

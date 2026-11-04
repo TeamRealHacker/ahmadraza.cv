@@ -43,7 +43,6 @@ export default async function CaseStudy({ params }: Params) {
         <Link href="/work" className="case-back"><ArrowLeft size={15} /> All work</Link>
 
         <header className="case-header" style={{ "--accent-project": p.accent } as CSSProperties}>
-          <p className="text-xs uppercase tracking-[0.25em] text-muted">Case study</p>
           <h1 className="case-title">{p.title}</h1>
           <p className="case-tagline">{p.tagline}</p>
         </header>
