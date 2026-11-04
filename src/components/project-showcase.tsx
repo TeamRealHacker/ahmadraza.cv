@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { projects as seedProjects, type Project } from "@/data/projects";
 import { ProjectVideoFrame } from "./project-video";
+import { PhoneFrame } from "./phone-frame";
 
 type Props = { projects?: Project[]; limit?: number; showMore?: boolean };
 
@@ -25,13 +26,24 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
         data-reveal
       >
         <Link href={`/work/${feature.slug}`} className="showcase-media" aria-label={`${feature.title} — view case study`}>
-          <div className="showcase-frame">
+          <div className={`showcase-frame ${feature.slug === "kite" ? "showcase-frame--phone" : ""}`}>
+            {feature.slug === "kite" ? (
+              <PhoneFrame>
+                <ProjectVideoFrame
+                  slug={feature.slug}
+                  image={feature.image}
+                  alt={`${feature.title} — ${feature.tagline}`}
+                  sizes="(max-width: 1024px) 80vw, 230px"
+                />
+              </PhoneFrame>
+            ) : (
             <ProjectVideoFrame
               slug={feature.slug}
               image={feature.image}
               alt={`${feature.title} — ${feature.tagline}`}
               sizes="(max-width: 1024px) 100vw, 960px"
             />
+            )}
             <span className="showcase-accent" aria-hidden="true" />
           </div>
         </Link>
@@ -62,13 +74,24 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
           data-reveal
         >
           <Link href={`/work/${p.slug}`} className="showcase-media" aria-label={`${p.title} — view case study`}>
-            <div className="showcase-frame">
+            <div className={`showcase-frame ${p.slug === "kite" ? "showcase-frame--phone" : ""}`}>
+              {p.slug === "kite" ? (
+                <PhoneFrame>
+                  <ProjectVideoFrame
+                    slug={p.slug}
+                    image={p.image}
+                    alt={`${p.title} — ${p.tagline}`}
+                    sizes="(max-width: 820px) 80vw, 230px"
+                  />
+                </PhoneFrame>
+              ) : (
               <ProjectVideoFrame
                 slug={p.slug}
                 image={p.image}
                 alt={`${p.title} — ${p.tagline}`}
                 sizes="(max-width: 820px) 100vw, 560px"
               />
+              )}
                 <span className="showcase-accent" aria-hidden="true" />
             </div>
           </Link>

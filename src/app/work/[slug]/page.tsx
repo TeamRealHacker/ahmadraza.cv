@@ -8,6 +8,7 @@ import { ProjectTheme } from "@/components/project-theme";
 import { Footer } from "@/components/footer";
 import { getProjects } from "@/lib/projects-store";
 import { ProjectVideoFrame } from "@/components/project-video";
+import { PhoneFrame } from "@/components/phone-frame";
 import { site } from "@/data/site";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -47,6 +48,11 @@ export default async function CaseStudy({ params }: Params) {
           <p className="case-tagline">{p.tagline}</p>
         </header>
 
+        {p.slug === "kite" ? (
+          <PhoneFrame label="Kite — running on Android">
+            <ProjectVideoFrame slug={p.slug} image={p.image} alt={`${p.title} — ${p.tagline}`} sizes="(max-width: 640px) 80vw, 300px" priority />
+          </PhoneFrame>
+        ) : (
         <div className="case-showcase">
           <div className="case-bar">
             <span className="project-dots" aria-hidden="true"><i /><i /><i /></span>
@@ -57,6 +63,7 @@ export default async function CaseStudy({ params }: Params) {
             <ProjectVideoFrame slug={p.slug} image={p.image} alt={`${p.title} — ${p.tagline}`} sizes="(max-width: 1024px) 100vw, 960px" priority />
           </div>
         </div>
+        )}
 
         <div className="case-body">
           <div>
