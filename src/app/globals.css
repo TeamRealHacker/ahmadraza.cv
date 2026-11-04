@@ -1507,5 +1507,5 @@ body:has(.admin-locked) :is(.site-nav, .theme-float, .theme-ring, .theme-note, .
 /* Phone inside a showcase card: keep the card, centre a smaller phone. */
 .showcase-frame--phone { aspect-ratio: auto; clip-path: none; border-radius: 18px; display: grid; place-items: center; padding: 26px 12px 20px; background: color-mix(in srgb, var(--fg) 4%, var(--card)); }
 .showcase-frame--phone .phone-wrap { padding: 0; }
-.showcase-frame--phone .phone-frame { width: min(230px, 72%); }
+.showcase-frame--phone .phone-frame { width: min(230px, 78vw); }
 .showcase-frame--phone .phone-caption { display: none; }
