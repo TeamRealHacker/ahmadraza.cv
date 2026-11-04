@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { Instrument_Serif } from "next/font/google";
-import { GeistSans } from "geist/font/sans";
+import localFont from "next/font/local";
 import { Providers } from "@/components/providers";
 import { MenuNotch } from "@/components/menu-notch";
 import { themeInitScript } from "@/lib/theme";
@@ -9,8 +9,32 @@ import { site } from "@/data/site";
 import "./globals.css";
 import "./polish.css";
 
-/* Display accent: a refined serif used sparingly (italic accent words,
-   the banner line). Everything else is Geist Sans. */
+/* Type system (self-hosted, Fontshare, free for commercial use):
+   - Clash Display: display face for the banner, names, headings, AR mark.
+   - Satoshi: body copy, navigation, buttons, small meta.
+   - Instrument Serif italic: sparing accent words inside headings. */
+const display = localFont({
+  src: [
+    { path: "../fonts/ClashDisplay-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/ClashDisplay-Semibold.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/ClashDisplay-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-clash",
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
+const sans = localFont({
+  src: [
+    { path: "../fonts/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
 const serif = Instrument_Serif({
   subsets: ["latin"],
   weight: "400",
@@ -68,7 +92,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${serif.variable} dark`} suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${display.variable} ${serif.variable} dark`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
