@@ -17,7 +17,7 @@ export function GithubGraph() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<State>({ status: "idle", total: 0, days: [] });
 
-  // Fetch only when the footer scrolls into view.
+  // Fetch only when the graph scrolls into view.
   useEffect(() => {
     const el = boxRef.current;
     if (!el) return;
@@ -66,7 +66,7 @@ export function GithubGraph() {
   const height = 7 * (CELL + GAP) + 16;
 
   return (
-    <div ref={boxRef} aria-busy={state.status === "loading"} className="min-w-0 overflow-hidden rounded-2xl border border-line bg-card px-5 py-4">
+    <div ref={boxRef} aria-busy={state.status === "loading"} className="gh-panel min-w-0 overflow-hidden px-5 py-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <h3 className="text-sm font-medium">GitHub activity</h3>
@@ -82,7 +82,7 @@ export function GithubGraph() {
           href={`https://github.com/${site.handle}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs transition-colors hover:bg-fg/[0.07]"
+          className="gh-chip transition-colors"
         >
           @{site.handle} <ArrowUpRight size={12} />
         </a>
