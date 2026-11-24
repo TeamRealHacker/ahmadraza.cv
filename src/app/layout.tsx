@@ -1,27 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import localFont from "next/font/local";
 import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import { Providers } from "@/components/providers";
-import { MenuNotch } from "@/components/menu-notch";
+import { Navbar } from "@/components/navbar";
 import { themeInitScript } from "@/lib/theme";
 import { site } from "@/data/site";
 import "./globals.css";
-
-const pixel = localFont({
-  src: "../fonts/pixelify.woff2",
-  variable: "--font-pixelify",
-  weight: "400 700",
-  display: "swap",
-  preload: true,
-});
-
-const hand = localFont({
-  src: "../fonts/handwriting.woff2",
-  variable: "--font-hand",
-  weight: "600",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -33,8 +18,7 @@ export const metadata: Metadata = {
   keywords: [
     "Ahmad Raza", "MrRealORG", "portfolio", "developer", "designer", "RealHackers",
     "Next.js", "React", "AI tools", "web developer", "Faisalabad", "Python", "automation",
-    "NookNook", "free-ui", "Kanso UI", "GTA-REAL", "Tide Island", "dotnote",
-    "CenterFace AI", "Kite", "open source", "GitHub",
+    "Nook", "free-ui", "CenterFace AI", "Kite", "open source", "GitHub",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -59,14 +43,14 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f2ee" },
-    { media: "(prefers-color-scheme: dark)", color: "#0b0b0d" },
+    { media: "(prefers-color-scheme: light)", color: "#f5f3ec" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0b0e" },
   ],
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${pixel.variable} ${hand.variable} dark`} suppressHydrationWarning>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} dark`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
@@ -78,9 +62,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           Skip to content
         </a>
         <Providers>
-          <header className="pointer-events-none fixed inset-x-0 top-4 z-50 flex justify-center px-3 sm:px-4">
-            <MenuNotch />
-          </header>
+          <Navbar />
           {children}
         </Providers>
       </body>

@@ -9,14 +9,26 @@ type Props = { projects?: Project[]; limit?: number; showMore?: boolean };
 
 /**
  * Editorial project showcase: one full-width cinematic feature followed by
- * alternating split spreads. `limit` trims it for the home page, and
- * `showMore` adds a clean index pointing at the remaining work on /work.
+ * alternating split spreads. Recordings play on hover (case study pages use
+ * eager autoplay) — see project-video.tsx for the loading strategy.
  */
 export function ProjectShowcase({ projects = seedProjects, limit, showMore = false }: Props) {
   const all = projects;
   const list = limit ? all.slice(0, limit) : all;
   const [feature, ...rest] = list;
   const remaining = all.slice(list.length);
+
+  if (!feature) return null;
+
+  const bar = (p: Project) => (
+    <div className="showcase-bar" aria-hidden="true">
+      <span className="project-dots"><i /><i /><i /></span>
+      <span className="project-url">
+        {p.href ? p.href.replace(/^https?:\/\//, "").replace(/\/$/, "") : `${p.title.toLowerCase().replace(/[^a-z0-9]+/g, "")}.app`}
+      </span>
+      <span className="showcase-bar-live">{p.year} · {p.role}</span>
+    </div>
+  );
 
   return (
     <div className={`showcase-list ${showMore && remaining.length ? "has-more" : ""}`}>
@@ -26,27 +38,20 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
         data-reveal
       >
         <Link href={`/work/${feature.slug}`} className="showcase-media" aria-label={`${feature.title} — view case study`}>
-          <div className={`showcase-frame ${feature.slug === "kite" ? "showcase-frame--phone" : ""}`}>
-            {feature.slug === "kite" ? (
-              <PhoneFrame>
-                <ProjectVideoFrame
-                  slug={feature.slug}
-                  image={feature.image}
-                  alt={`${feature.title} — ${feature.tagline}`}
-                  sizes="(max-width: 1024px) 80vw, 230px"
-                />
-              </PhoneFrame>
-            ) : (
-            <ProjectVideoFrame
-              slug={feature.slug}
-              image={feature.image}
-              alt={`${feature.title} — ${feature.tagline}`}
-              sizes="(max-width: 1024px) 100vw, 960px"
-            />
-            )}
-            <span className="showcase-accent" aria-hidden="true" />
+          <div className="showcase-frame">
+            {bar(feature)}
+            <div className="showcase-screen">
+              <ProjectVideoFrame
+                slug={feature.slug}
+                image={feature.image}
+                alt={`${feature.title} — ${feature.tagline}`}
+                sizes="(max-width: 1024px) 100vw, 960px"
+                mode="hover"
+              />
+            </div>
           </div>
         </Link>
+        <span className="showcase-accent" aria-hidden="true" />
 
         <div className="showcase-feature-caption">
           <div>
@@ -74,25 +79,29 @@ export function ProjectShowcase({ projects = seedProjects, limit, showMore = fal
           data-reveal
         >
           <Link href={`/work/${p.slug}`} className="showcase-media" aria-label={`${p.title} — view case study`}>
-            <div className={`showcase-frame ${p.slug === "kite" ? "showcase-frame--phone" : ""}`}>
+            <div className="showcase-frame">
+              {bar(p)}
               {p.slug === "kite" ? (
-                <PhoneFrame>
+                <PhoneFrame label="Kite — running on Android">
                   <ProjectVideoFrame
                     slug={p.slug}
                     image={p.image}
                     alt={`${p.title} — ${p.tagline}`}
                     sizes="(max-width: 820px) 80vw, 230px"
+                    mode="hover"
                   />
                 </PhoneFrame>
               ) : (
-              <ProjectVideoFrame
-                slug={p.slug}
-                image={p.image}
-                alt={`${p.title} — ${p.tagline}`}
-                sizes="(max-width: 820px) 100vw, 560px"
-              />
+                <div className="showcase-screen">
+                  <ProjectVideoFrame
+                    slug={p.slug}
+                    image={p.image}
+                    alt={`${p.title} — ${p.tagline}`}
+                    sizes="(max-width: 820px) 100vw, 560px"
+                    mode="hover"
+                  />
+                </div>
               )}
-                <span className="showcase-accent" aria-hidden="true" />
             </div>
           </Link>
 
