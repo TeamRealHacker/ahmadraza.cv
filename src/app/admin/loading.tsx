@@ -1,3 +1,5 @@
+import "@/styles/console.css";
+
 export default function Loading() {
   return (
     <main className="admin-page" aria-busy="true" aria-label="Loading console">

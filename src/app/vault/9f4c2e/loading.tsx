@@ -1,3 +1,5 @@
+import "@/styles/console.css";
+
 export default function Loading() {
   return (
     <main

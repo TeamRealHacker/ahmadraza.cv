@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@/styles/console.css";
 import { VaultGate } from "@/components/vault-gate";
 
 export const metadata: Metadata = {

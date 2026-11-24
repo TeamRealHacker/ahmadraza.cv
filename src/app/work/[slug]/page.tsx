@@ -39,27 +39,27 @@ export default async function CaseStudy({ params }: Params) {
   return (
     <>
       <ProjectTheme accent={p.accent} slug={p.slug} />
-      <main id="main" className="mx-auto max-w-5xl px-5 pt-28 sm:px-8 sm:pt-36">
+      <main id="main" className="section case-page">
         <Link href="/work" className="case-back"><ArrowLeft size={15} /> All work</Link>
 
         <header className="case-header" style={{ "--accent-project": p.accent } as CSSProperties}>
           <h1 className="case-title">{p.title}</h1>
-          <p className="case-tagline">{p.tagline}</p>
+          <p className="case-tagline">{p.tagline} · {p.year} · {p.client}</p>
         </header>
 
         {p.slug === "kite" ? (
           <PhoneFrame label="Kite — running on Android">
-            <ProjectVideoFrame slug={p.slug} image={p.image} alt={`${p.title} — ${p.tagline}`} sizes="(max-width: 640px) 80vw, 300px" priority />
+            <ProjectVideoFrame slug={p.slug} image={p.image} alt={`${p.title} — ${p.tagline}`} sizes="(max-width: 640px) 80vw, 300px" priority mode="eager" />
           </PhoneFrame>
         ) : (
         <div className="case-showcase">
           <div className="case-bar">
             <span className="project-dots" aria-hidden="true"><i /><i /><i /></span>
-            <span className="project-url">{p.title.toLowerCase().replace(/[^a-z0-9]+/g, "")}.app</span>
+            <span className="project-url">{p.href ? p.href.replace(/^https?:\/\//, "").replace(/\/$/, "") : `${p.title.toLowerCase().replace(/[^a-z0-9]+/g, "")}.app`}</span>
             <span className="text-[10px] uppercase tracking-[0.16em] text-muted">Preview</span>
           </div>
           <div className="case-image">
-            <ProjectVideoFrame slug={p.slug} image={p.image} alt={`${p.title} — ${p.tagline}`} sizes="(max-width: 1024px) 100vw, 960px" priority />
+            <ProjectVideoFrame slug={p.slug} image={p.image} alt={`${p.title} — ${p.tagline}`} sizes="(max-width: 1024px) 100vw, 960px" priority mode="eager" />
           </div>
         </div>
         )}
