@@ -1,114 +1,111 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-import type { CSSProperties } from "react";
 import Image from "next/image";
-import { m, useScroll, useTransform } from "framer-motion";
-import { Stars } from "./stars";
+import Link from "next/link";
+import { ArrowRight, MapPin } from "lucide-react";
+import { SocialIcon } from "./icons";
 import { site } from "@/data/site";
-import { SKIES, type SkyId } from "@/data/skies";
-import { SKY_EVENT, getSkyTheme, setSkyTheme } from "@/lib/sky";
+import { projects } from "@/data/projects";
 
-const HEADING = "I Work For Real !!";
+const HEADING = "I build software that actually ships.";
 
+/**
+ * Editorial hero: eyebrow + availability chip, one clear headline, the bio,
+ * two CTAs — and a profile card (portrait, role, socials) beside it.
+ * Pure CSS background (dot grid + glows), no wallpapers, no canvas: the
+ * first paint is instant and scrolling stays smooth.
+ */
 export function Hero() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [sky, setSky] = useState<SkyId>("space");
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "6%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.04]);
-
-  useEffect(() => {
-    const saved = getSkyTheme();
-    queueMicrotask(() => {
-      setSky(saved);
-      /* Also broadcast once on mount so the ambient wash matches a saved sky. */
-      window.dispatchEvent(new CustomEvent(SKY_EVENT, { detail: saved }));
-    });
-  }, []);
-
-  const choose = (id: SkyId) => {
-    setSky(id);
-    setSkyTheme(id);
-  };
-
-  const active = SKIES.find((s) => s.id === sky) ?? SKIES[0];
-
   return (
-    <section aria-label="Introduction" className="px-3 pt-3 sm:px-5" ref={ref}>
-      <div className="hero-shell relative mx-auto max-w-5xl overflow-hidden">
-        <m.div style={{ y, scale }} className="absolute inset-0">
-          <Image
-            key={`${sky}-desktop`}
-            src={`/images/real-${sky}-desktop.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="(min-width: 641px) 1024px, 100vw"
-            style={{ objectPosition: active.focus }}
-            className="hero-img hero-img-desktop object-cover"
-          />
-          <Image
-            key={`${sky}-mobile`}
-            src={`/images/real-${sky}-mobile.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="hero-img hero-img-mobile object-cover"
-          />
-        </m.div>
+    <section aria-label="Introduction" className="hero section">
+      <div className="hero-grid">
+        <div>
+          <p className="hero-eyebrow">
+            <span className="hero-status">
+              <span className="hero-status-dot" aria-hidden="true" />
+              Available for new work
+            </span>
+            <span>{site.name} — {site.location}</span>
+          </p>
 
-        <div className="hero-wash" aria-hidden="true" />
-        <div className="hero-stars" aria-hidden="true">
-          <Stars density={0.05} color="#fff6e6" shooting shootingColor="#fff1cd" />
-        </div>
-
-        <span className="hero-side" aria-hidden="true">{site.name.split(" ")[0]}</span>
-
-        <div className="relative z-10 flex h-full items-center justify-center px-12 sm:px-20">
-          <h1
-            aria-label={HEADING}
-            className="pixel-title hero-title text-center text-[clamp(1.9rem,8vw,5.2rem)] leading-none"
-          >
-            {HEADING.split("").map((ch, i) => (
-              <span
-                key={i}
-                aria-hidden="true"
-                className="char-in"
-                style={{ animationDelay: `${100 + i * 42}ms`, whiteSpace: "pre" }}
-              >
-                {ch}
-              </span>
-            ))}
+          <h1 className="hero-title" aria-label={HEADING}>
+            I build software that <em>actually ships.</em>
           </h1>
+
+          <p className="hero-sub">
+            Founder &amp; developer at <strong>RealHackers</strong> — premium websites, AI-powered
+            tools, desktop apps and automation systems. Self-taught, obsessed with details,
+            performance and things that just work.
+          </p>
+
+          <div className="hero-cta-row">
+            <Link href="/work" className="btn btn-primary">
+              See the work <ArrowRight size={15} aria-hidden="true" />
+            </Link>
+            <a href={`mailto:${site.email}`} className="btn">
+              Say hello
+            </a>
+          </div>
+
+          <p className="hero-meta">
+            <span>{site.domain}</span>
+            <span aria-hidden="true" className="hero-meta-sep">/</span>
+            <a href={`https://github.com/${site.handle}`} target="_blank" rel="noopener noreferrer">
+              @{site.handle}
+            </a>
+            <span aria-hidden="true" className="hero-meta-sep">/</span>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </p>
         </div>
 
-        {/* Minimal sky control: five colour dots + the active sky's name.
-            Sits directly on the banner surface, no bar and no icon. */}
-        <div className="sky-mini" data-sky={sky} role="group" aria-label="Banner sky theme">
-          <div className="sky-mini-dots">
-            {SKIES.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                className={`sky-mini-dot${s.id === sky ? " is-active" : ""}`}
-                style={{ "--sky-chip-accent": s.accent } as CSSProperties}
-                onClick={() => choose(s.id)}
-                aria-label={`${s.label} sky`}
-                aria-pressed={s.id === sky}
-                title={`${s.label} sky`}
-              >
-                <Image src={s.planet} alt="" width={30} height={30} className="sky-mini-planet" />
-              </button>
-            ))}
+        <aside className="hero-card" aria-label="Profile">
+          <div className="hero-portrait">
+            <Image
+              src="/images/avatar.webp"
+              alt={`Portrait of ${site.name}`}
+              width={440}
+              height={440}
+              priority
+              sizes="(max-width: 960px) 320px, 380px"
+            />
           </div>
-          <span className="sky-mini-sep" aria-hidden="true" />
-          <span className="sky-mini-label" aria-live="polite">{active.label}</span>
-        </div>
+          <h2 className="hero-card-name">{site.name}</h2>
+          <p className="hero-card-role">{site.role} @ RealHackers</p>
+          <div className="hero-card-row">
+            <span className="hero-card-location">
+              <MapPin size={12} aria-hidden="true" /> {site.location}
+            </span>
+            <div className="hero-card-socials">
+              {site.socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  target={s.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                >
+                  <SocialIcon name={s.icon} width={16} height={16} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </aside>
       </div>
+
+      {/* Stats — real <ul> markup with visible labels, so it can never
+          render as run-together text. */}
+      <ul className="hero-stats" aria-label="At a glance">
+        <li className="hero-stat">
+          <span className="hero-stat-num">{String(projects.length).padStart(2, "0")}</span>
+          <span className="hero-stat-label">Projects shipped</span>
+        </li>
+        <li className="hero-stat">
+          <span className="hero-stat-num">{String(site.skills.length).padStart(2, "0")}</span>
+          <span className="hero-stat-label">Tools in the kit</span>
+        </li>
+        <li className="hero-stat">
+          <span className="hero-stat-num">01</span>
+          <span className="hero-stat-label">Human behind it all</span>
+        </li>
+      </ul>
     </section>
   );
 }

@@ -1,23 +1,27 @@
 import { ArrowUp, ArrowUpRight } from "lucide-react";
-import { MatrixPills } from "./matrix-pills";
 import { VisitorCounter } from "./visitor-counter";
 import { SocialIcon } from "./icons";
 import { site } from "@/data/site";
 
-/** Clean footer: one bottom row, nothing repeated. */
+/** Footer: one big CTA, one clean bottom row, giant outline wordmark. */
 export function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-head" data-reveal>
-        <h2 className="footer-title">Let&apos;s build<br /><em>something real</em></h2>
-        <p className="footer-sub">One message is enough. Tell me the idea and I&apos;ll take it from there.</p>
-        <a href={`mailto:${site.email}`} className="footer-cta">
-          Say hello <ArrowUpRight size={17} />
-        </a>
-        <a href={`mailto:${site.email}`} className="footer-mail-link">{site.email}</a>
+        <p className="footer-kicker">Contact</p>
+        <h2 className="footer-title">
+          Let&apos;s build<br /><em>something real</em>
+        </h2>
+        <p className="footer-sub">
+          One message is enough. Tell me the idea and I&apos;ll take it from there.
+        </p>
+        <div className="footer-cta-row">
+          <a href={`mailto:${site.email}`} className="footer-cta">
+            Say hello <ArrowUpRight size={16} aria-hidden="true" />
+          </a>
+          <a href={`mailto:${site.email}`} className="footer-mail-link">{site.email}</a>
+        </div>
       </div>
-
-      <MatrixPills />
 
       <div className="footer-end" data-reveal>
         <div className="footer-end-row">
@@ -39,7 +43,7 @@ export function Footer() {
             ))}
           </ul>
           <VisitorCounter />
-          <a href="#main" className="footer-top">Back to top <ArrowUp size={13} /></a>
+          <a href="#main" className="footer-top">Back to top <ArrowUp size={13} aria-hidden="true" /></a>
         </div>
 
         <div className="footer-wordmark" aria-hidden="true">{site.name}</div>

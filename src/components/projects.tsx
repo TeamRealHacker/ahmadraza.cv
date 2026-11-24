@@ -7,14 +7,16 @@ const HOME_COUNT = 4;
 
 export function Projects({ projects }: { projects: Project[] }) {
   return (
-    <section id="projects" aria-labelledby="projects-title" className="projects-section">
-      <div className="projects-head" data-reveal>
+    <section id="projects" aria-labelledby="projects-title" className="section">
+      <div className="section-head" data-reveal>
         <div className="work-head">
-          <h2 id="projects-title" className="work-head-title work-head-title--sm">
+          <p className="work-head-kicker">Selected work</p>
+          <h2 id="projects-title" className="work-head-title">
             Things I&apos;ve <em>shipped</em>
           </h2>
-          <div className="work-head-rule" aria-hidden="true"><span /><span /><span /><span /><span /><i /></div>
-          <p className="work-head-note">A few things I designed, built and actually put out into the world.</p>
+          <p className="work-head-note">
+            A few things I designed, built and actually put out into the world.
+          </p>
         </div>
         <Link href="/work" className="projects-all">
           All work <ArrowRight size={15} />
