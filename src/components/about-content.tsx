@@ -108,26 +108,19 @@ export function AboutContent() {
     <main id="main" className="about-page" data-sky={sky}>
       <section className="about-hero" aria-label="About Ahmad Raza">
         <div className="about-hero-bg">
-          <Image
-            key={`${sky}-desktop`}
-            src={`/images/real-${sky}-desktop.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="about-hero-img about-hero-img-desktop object-cover"
-          />
-          <Image
-            key={`${sky}-mobile`}
-            src={`/images/real-${sky}-mobile.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="about-hero-img about-hero-img-mobile object-cover"
-          />
+          {/* Art-directed background: <picture> downloads ONLY the matching
+              source (desktop or phone artwork), never both. */}
+          <picture key={sky}>
+            <source media="(max-width: 820px)" srcSet={`/images/real-${sky}-mobile.webp`} />
+
+            <img
+              src={`/images/real-${sky}-desktop.webp`}
+              alt=""
+              fetchPriority="high"
+              decoding="async"
+              className="about-hero-img object-cover"
+            />
+          </picture>
         </div>
         <div className="about-hero-stars" aria-hidden="true">
           <Stars density={0.035} color="#fff6e6" shooting shootingColor="#fff1cd" />
