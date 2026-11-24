@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { Maximize2 } from "lucide-react";
+import { Maximize2, Play } from "lucide-react";
 import { projectVideo, type ProjectVideo } from "@/data/project-videos";
 
 /** The full-screen modal loads only when someone opens it, never on first paint. */
@@ -29,25 +29,19 @@ export const TOUR_VIDEO: VideoInfo = {
   startAt: 0.9,
 };
 
-type AutoVideoProps = {
-  video: VideoInfo;
-  startAt?: number;
-  className?: string;
-  controls?: boolean;
-  onExpand?: () => void;
-  showRec?: boolean;
-  children?: ReactNode;
-};
-
 /**
- * A screen recording that is ALREADY PLAYING — no play button, no click needed.
- * Muted + looped + inline so browsers allow autoplay; a ref effect re-kicks
- * playback because React does not always emit the `muted` attribute in SSR HTML.
+ * HOW RECORDINGS LOAD NOW (this used to be the "stuck Loading recording…"
+ * bug):
  *
- * Lazy by design: no video bytes are fetched until the player is near the
- * viewport (IntersectionObserver, 400px margin). Until then the poster shows
- * with a small loading indicator, so offscreen recordings (the tour, every
- * project below the fold) cost nothing on first paint.
+ *  - hover mode (cards on the home / work pages): the poster image renders
+ *    instantly and ZERO video bytes are fetched until the visitor actually
+ *    hovers the card. The video mounts on pointer-enter, unmounts on leave.
+ *  - eager mode (case study pages): the recording mounts when it scrolls
+ *    into view and plays muted + looped, as before.
+ *
+ * In both modes the "Loading" pill only exists while a mounted video is
+ * still buffering, and it disappears for good on error — the poster always
+ * stays underneath, so nothing is ever stuck or blank.
  */
 export function AutoVideo({
   video,
@@ -57,26 +51,42 @@ export function AutoVideo({
   onExpand,
   showRec = false,
   children,
-}: AutoVideoProps) {
-  const targetRef = useRef<HTMLElement | null>(null);
+  mode = "eager",
+}: {
+  video: VideoInfo;
+  startAt?: number;
+  className?: string;
+  controls?: boolean;
+  onExpand?: () => void;
+  showRec?: boolean;
+  children?: ReactNode;
+  mode?: "hover" | "eager";
+}) {
+  const targetRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(mode === "eager" && !controls ? false : true);
+  const [armed, setArmed] = useState(mode === "eager"); // hover mode: armed by pointer
   const [canPlay, setCanPlay] = useState(false);
+  const [failed, setFailed] = useState(false);
 
+  /* eager overlay mode: mount when near the viewport. The observer needs a
+     real layout box, which is why the overlay wrapper is .ar-video-box
+     (position: absolute) rather than display: contents. */
   useEffect(() => {
+    if (mode !== "eager" || controls) return;
     const el = targetRef.current;
-    if (!el) { setInView(true); return; }
-    if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
+    if (!el || typeof IntersectionObserver === "undefined") { setInView(true); return; }
     const io = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
-      { rootMargin: "400px" },
+      { rootMargin: "300px" },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [mode, controls]);
 
+  /* (Re)start playback whenever the element mounts. */
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || !armed) return;
     const v = videoRef.current;
     if (!v) return;
     const kick = () => {
@@ -88,14 +98,17 @@ export function AutoVideo({
     kick();
     v.addEventListener("loadeddata", kick);
     v.addEventListener("canplay", kick);
-    const onVisibility = () => (document.hidden ? v.pause() : kick());
-    document.addEventListener("visibilitychange", onVisibility);
     return () => {
       v.removeEventListener("loadeddata", kick);
       v.removeEventListener("canplay", kick);
-      document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [video.src, inView]);
+  }, [inView, armed]);
+
+  const showVideo = inView && armed && !failed;
+  const buffering = showVideo && !canPlay;
+  /* `controls` players (the admin console tour) render in normal document
+     flow; overlay cards render absolutely inside a positioned frame. */
+  const flow = Boolean(controls);
 
   const expand = onExpand ? (
     <button type="button" className="ar-video-expand" onClick={onExpand} aria-label={`Open ${video.title} full screen`} title="Full screen">
@@ -103,49 +116,101 @@ export function AutoVideo({
     </button>
   ) : null;
 
-  if (!inView) {
+  if (flow) {
     return (
-      <>
-        {/* eslint-disable-next-line jsx-a11y/alt-text */}
-        <img
-          ref={(el) => { targetRef.current = el; }}
-          src={video.poster}
-          alt=""
-          aria-hidden="true"
-          className={className}
-          loading="lazy"
-        />
-        <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>
-        {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
+      <div
+        ref={targetRef}
+        className="contents"
+        onPointerEnter={(e) => {
+          if (mode === "hover" && (e.pointerType === "mouse" || e.pointerType === "pen")) setArmed(true);
+        }}
+        onPointerLeave={() => { if (mode === "hover") setArmed(false); }}
+      >
+        {showVideo ? (
+          <video
+            ref={videoRef}
+            className={className}
+            src={`${video.src}#t=${startAt}`}
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls={controls}
+            preload="metadata"
+            disablePictureInPicture
+            onCanPlay={() => setCanPlay(true)}
+            onLoadedData={() => setCanPlay(true)}
+            onError={() => setFailed(true)}
+            aria-label={`${video.title} — recorded preview`}
+          />
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={video.poster}
+            alt=""
+            className={className}
+            style={{ aspectRatio: "16 / 9", objectFit: "cover" }}
+            loading="lazy"
+            aria-hidden="true"
+          />
+        )}
         {children}
         {expand}
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <video
-        ref={(el) => { videoRef.current = el; targetRef.current = el; }}
-        className={className}
-        src={`${video.src}#t=${startAt}`}
-        poster={video.poster}
-        autoPlay
-        muted
-        loop
-        playsInline
-        controls={controls}
-        preload="metadata"
-        disablePictureInPicture
-        onCanPlay={() => setCanPlay(true)}
-        onLoadedData={() => setCanPlay(true)}
-        aria-label={`${video.title} — recorded preview, playing automatically`}
+    <div
+      ref={targetRef}
+      className="ar-video-box"
+      onPointerEnter={(e) => {
+        if (mode === "hover" && (e.pointerType === "mouse" || e.pointerType === "pen")) setArmed(true);
+      }}
+      onPointerLeave={() => { if (mode === "hover") setArmed(false); }}
+      onFocus={() => { if (mode === "hover") setArmed(true); }}
+      onBlur={() => { if (mode === "hover") setArmed(false); }}
+    >
+      {/* Poster is always underneath the video — instant paint, graceful
+          fallback if the recording can't load or can't play (e.g. old
+          Safari without WebM). */}
+      <Image
+        src={video.poster}
+        alt=""
+        fill
+        sizes="(max-width: 820px) 100vw, 960px"
+        aria-hidden="true"
+        className={`ar-poster-fill${showVideo && canPlay ? " opacity-0" : ""}`}
+        style={{ transition: "opacity .25s ease" }}
       />
-      {!canPlay && <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>}
+
+      {showVideo && (
+        <video
+          ref={videoRef}
+          className={className}
+          src={`${video.src}#t=${startAt}`}
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls={controls}
+          preload="metadata"
+          disablePictureInPicture
+          onCanPlay={() => setCanPlay(true)}
+          onLoadedData={() => setCanPlay(true)}
+          onError={() => setFailed(true)}
+          aria-label={`${video.title} — recorded preview`}
+        />
+      )}
+
+      {buffering && <span className="ar-video-loading" aria-hidden="true">Loading…</span>}
       {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
+      {mode === "hover" && !showVideo && (
+        <span className="ar-video-hover-hint" aria-hidden="true"><Play size={10} /> Hover to play</span>
+      )}
       {children}
       {expand}
-    </>
+    </div>
   );
 }
 
@@ -160,6 +225,7 @@ export function ProjectVideoFrame({
   sizes,
   priority = false,
   startAt = 1.2,
+  mode = "hover",
 }: {
   slug: string;
   image: string;
@@ -167,12 +233,13 @@ export function ProjectVideoFrame({
   sizes: string;
   priority?: boolean;
   startAt?: number;
+  mode?: "hover" | "eager";
 }) {
   const video: ProjectVideo | undefined = projectVideo(slug);
   if (!video) {
     return <Image src={image} alt={alt} fill sizes={sizes} priority={priority} className="object-cover object-top" />;
   }
-  return <AutoVideo video={video} startAt={startAt} />;
+  return <AutoVideo video={video} startAt={startAt} mode={mode} />;
 }
 
 type Props = { slug: string; variant?: "button" | "card" };
@@ -193,7 +260,7 @@ export function WatchProject({ slug, variant = "button" }: Props) {
           aria-label={`Open the ${video.title} recording full screen`}
           title={`${video.title} — full screen`}
         >
-          <AutoVideo video={video} showRec={false} />
+          <AutoVideo video={video} showRec={false} mode="eager" />
           <span className="project-video-card-overlay">
             <span className="project-video-card-expand"><Maximize2 size={14} /></span>
             <strong>{video.title}</strong>
