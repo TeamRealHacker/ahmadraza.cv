@@ -50,7 +50,7 @@ export function GithubRepos() {
 
   if (!repos) {
     return (
-      <section aria-label="Open source on GitHub" aria-busy="true" className="mx-auto max-w-5xl px-5 py-10 sm:px-8" data-reveal>
+      <section aria-label="Open source on GitHub" aria-busy="true" className="section pt-0" data-reveal>
         <div className="mb-5 flex items-center justify-between gap-3">
           <div className="w-full max-w-xs">
             <div className="skeleton h-6 w-2/3" />
@@ -60,7 +60,7 @@ export function GithubRepos() {
         </div>
         <ul className="grid gap-3 sm:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <li key={i} className="rounded-2xl border border-line bg-card px-5 py-4" aria-hidden="true">
+            <li key={i} className="gh-repo" aria-hidden="true">
               <div className="skeleton h-5 w-1/2" />
               <div className="mt-3 skeleton h-4 w-full" />
               <div className="mt-2 skeleton h-4 w-2/3" />
@@ -74,10 +74,10 @@ export function GithubRepos() {
 
   if (repos.length === 0) {
     return (
-      <section aria-labelledby="github-repos-title" className="mx-auto max-w-5xl px-5 py-10 sm:px-8" data-reveal>
-        <h2 id="github-repos-title" className="text-xl font-semibold">Open source on GitHub</h2>
+      <section aria-labelledby="github-repos-title" className="section pt-0" data-reveal>
+        <h2 id="github-repos-title" className="text-xl font-semibold">Open source</h2>
         <p className="mt-2 text-sm text-muted">No public repositories to show right now — try the profile instead.</p>
-        <a href={`https://github.com/${site.handle}`} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs hover:bg-fg/[0.07]">
+        <a href={`https://github.com/${site.handle}`} target="_blank" rel="noopener noreferrer" className="gh-chip mt-3">
           @{site.handle} <ArrowUpRight size={12} />
         </a>
       </section>
@@ -85,11 +85,12 @@ export function GithubRepos() {
   }
 
   return (
-    <section aria-labelledby="github-repos-title" className="mx-auto max-w-5xl px-5 py-10 sm:px-8" data-reveal>
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <div>
-          <h2 id="github-repos-title" className="text-xl font-semibold">Open source on GitHub</h2>
-          <p className="text-sm text-muted">
+    <section aria-labelledby="github-repos-title" className="section pt-0" data-reveal>
+      <div className="section-head">
+        <div className="work-head">
+          <p className="work-head-kicker">Open source</p>
+          <h2 id="github-repos-title" className="work-head-title work-head-title--sm">Open source on GitHub</h2>
+          <p className="work-head-note">
             {usingFallback
               ? "Live list unavailable right now — showing a verified snapshot."
               : "Top repositories by stars."}
@@ -99,14 +100,14 @@ export function GithubRepos() {
           href={`https://github.com/${site.handle}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex shrink-0 items-center gap-1 rounded-full border border-line px-3 py-1.5 text-xs transition-colors hover:bg-fg/[0.07]"
+          className="gh-chip transition-colors"
         >
           @{site.handle} <ArrowUpRight size={12} />
         </a>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2">
         {repos.map((repo) => (
-          <li key={repo.name} className="rounded-2xl border border-line bg-card px-5 py-4">
+          <li key={repo.name} className="gh-repo">
             {repo.html_url ? (
               <a href={repo.html_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium hover:underline">
                 {repo.name} <ArrowUpRight size={13} />

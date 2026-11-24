@@ -71,10 +71,11 @@ export function Reviews() {
       : null;
 
   return (
-    <section aria-labelledby="reviews-title" className="projects-section">
-      <div className="projects-head" data-reveal>
+    <section aria-labelledby="reviews-title" className="section">
+      <div className="section-head" data-reveal>
         <div className="work-head">
-          <h2 id="reviews-title" className="work-head-title work-head-title--sm">
+          <p className="work-head-kicker">Testimonials</p>
+          <h2 id="reviews-title" className="work-head-title">
             What people <em>say</em>
           </h2>
           <p className="work-head-note">Real words from people Ahmad has worked with.</p>
