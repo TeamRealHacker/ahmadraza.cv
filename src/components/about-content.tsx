@@ -1,16 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { MouseEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, Check, Copy, Mail, MapPin } from "lucide-react";
-import { Stars } from "./stars";
-import { SocialIcon } from "./icons";
+import { ArrowRight, Check, Copy, MapPin, Mail } from "lucide-react";
 import { site } from "@/data/site";
 import { projects } from "@/data/projects";
-import { SKIES, SKY_STORAGE_KEY } from "@/data/skies";
-import { SKY_EVENT, isValidSky } from "@/lib/sky";
 
 const STEPS = [
   { kicker: "01 / Now", title: "Who I am", body: site.bio },
@@ -25,38 +20,11 @@ const STATS = [
 ];
 
 export function AboutContent() {
-  const [sky, setSky] = useState<string>("space");
   const [copied, setCopied] = useState(false);
   const [counts, setCounts] = useState<number[]>([0, 0, 0]);
   const statsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(SKY_STORAGE_KEY);
-      if (saved && SKIES.some((s) => s.id === saved)) queueMicrotask(() => setSky(saved));
-    } catch {
-      /* storage unavailable — keep the default sky */
-    }
-  }, []);
-
-  /* Keep the hero artwork in step with the shared ambient sky, even if the
-     theme is changed from another tab. */
-  useEffect(() => {
-    const onSky = (e: Event) => {
-      const id = (e as CustomEvent<string>).detail;
-      if (isValidSky(id)) setSky(id);
-    };
-    const onStorage = (e: StorageEvent) => {
-      if ((!e.key || e.key === SKY_STORAGE_KEY) && isValidSky(e.newValue)) setSky(e.newValue);
-    };
-    window.addEventListener(SKY_EVENT, onSky);
-    window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener(SKY_EVENT, onSky);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, []);
-
+  /* Count the stats up once, when they scroll into view. */
   useEffect(() => {
     const el = statsRef.current;
     if (!el) return;
@@ -97,76 +65,40 @@ export function AboutContent() {
     }
   };
 
-  const spotlight = (e: MouseEvent<HTMLElement>) => {
-    const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
-    el.style.setProperty("--mx", `${((e.clientX - rect.left) / rect.width) * 100}%`);
-    el.style.setProperty("--my", `${((e.clientY - rect.top) / rect.height) * 100}%`);
-  };
-
   return (
-    <main id="main" className="about-page" data-sky={sky}>
+    <main id="main" className="section about-page">
       <section className="about-hero" aria-label="About Ahmad Raza">
-        <div className="about-hero-bg">
-          <Image
-            key={`${sky}-desktop`}
-            src={`/images/real-${sky}-desktop.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="about-hero-img about-hero-img-desktop object-cover"
-          />
-          <Image
-            key={`${sky}-mobile`}
-            src={`/images/real-${sky}-mobile.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="about-hero-img about-hero-img-mobile object-cover"
-          />
+        <p className="work-head-kicker">About</p>
+        <h1 className="about-name" aria-label={site.name}>
+          {site.name.split("").map((ch, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className="char-in"
+              style={{ animationDelay: `${90 + i * 55}ms`, whiteSpace: "pre" }}
+            >
+              {ch}
+            </span>
+          ))}
+          <span className="about-dot" aria-hidden="true">.</span>
+        </h1>
+        <div className="about-signature-row">
+          <span className="about-signature">Ahmad</span>
+          <span className="about-signature-handle">— @{site.handle}</span>
         </div>
-        <div className="about-hero-stars" aria-hidden="true">
-          <Stars density={0.035} color="#fff6e6" shooting shootingColor="#fff1cd" />
+        <p className="about-lead">{site.tagline}</p>
+        <div className="about-actions">
+          <a href={`mailto:${site.email}`} className="about-cta">
+            <Mail size={15} /> {site.email}
+          </a>
+          <button type="button" onClick={copyEmail} className="about-copy" aria-label="Copy email address">
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+            <span>{copied ? "Copied" : "Copy"}</span>
+          </button>
+          <Link href="/work" className="about-work-link">
+            See the work <ArrowRight size={15} />
+          </Link>
         </div>
-        <span className="about-hero-side" aria-hidden="true">{site.name}</span>
-
-        <div className="about-hero-inner">
-          <h1 className="about-name" aria-label={site.name}>
-            {site.name.split("").map((ch, i) => (
-              <span
-                key={i}
-                aria-hidden="true"
-                className="about-name-char"
-                style={{ animationDelay: `${90 + i * 55}ms`, whiteSpace: "pre" }}
-              >
-                {ch}
-              </span>
-            ))}
-            <span className="about-dot" aria-hidden="true">.</span>
-          </h1>
-          <div className="about-signature-row">
-            <span className="about-signature">Ahmad</span>
-            <span className="about-signature-handle">— @{site.handle}</span>
-          </div>
-          <p className="about-lead">{site.tagline}</p>
-          <div className="about-actions">
-            <a href={`mailto:${site.email}`} className="about-cta">
-              <Mail size={15} /> {site.email} <ArrowUpRight size={14} />
-            </a>
-            <button type="button" onClick={copyEmail} className="about-copy" aria-label="Copy email address">
-              {copied ? <Check size={14} /> : <Copy size={14} />}
-              <span>{copied ? "Copied" : "Copy"}</span>
-            </button>
-            <Link href="/work" className="about-work-link">
-              See the work <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-        <div className="about-hero-fade" aria-hidden="true" />
       </section>
 
       <div className="about-inner">
@@ -180,17 +112,16 @@ export function AboutContent() {
         </div>
 
         <div className="about-grid">
-          <figure className="about-portrait" data-reveal onMouseMove={spotlight}>
+          <figure className="about-portrait" data-reveal>
             <div className="about-portrait-frame">
               <Image
                 src="/images/avatar.webp"
-                alt={`${site.name} — GitHub profile picture`}
+                alt={`${site.name} — profile picture`}
                 width={400}
                 height={400}
                 sizes="(max-width: 820px) 100vw, 420px"
                 className="about-portrait-img"
               />
-              <span className="about-portrait-spot" aria-hidden="true" />
               <span className="about-portrait-tag">@{site.handle}</span>
             </div>
             <figcaption>
@@ -214,7 +145,7 @@ export function AboutContent() {
 
         <div className="about-signoff" data-reveal aria-hidden="true">
           <span className="about-signoff-rule" />
-          <span className="about-signoff-hand">Ahmad</span>
+          <span className="about-signoff-hand">Ahmad — {site.domain}</span>
           <span className="about-signoff-rule" />
         </div>
       </div>

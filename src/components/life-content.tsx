@@ -1,14 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Camera } from "lucide-react";
-import { Stars } from "./stars";
 import { LifeGrid } from "./life-grid";
 import { site } from "@/data/site";
-import { SKIES, SKY_STORAGE_KEY } from "@/data/skies";
-import { SKY_EVENT, isValidSky } from "@/lib/sky";
 import { animatedEmojis, reactionOptions, type LifePost } from "@/data/life";
 
 const TITLE = "Life, unfiltered.";
@@ -26,7 +22,6 @@ export function LifeContent({
   initialPosts: LifePost[];
   initialCounts: Record<string, Record<string, number>>;
 }) {
-  const [sky, setSky] = useState<string>("space");
   /* Admin-only composer: only true after GET /api/admin returns 200 with
      the HttpOnly admin session cookie. Starts false, so visitors never
      see the composer flash in. */
@@ -40,33 +35,6 @@ export function LifeContent({
   }, []);
   const [counts, setCounts] = useState<number[]>([0, 0, 0]);
   const statsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(SKY_STORAGE_KEY);
-      if (saved && SKIES.some((s) => s.id === saved)) queueMicrotask(() => setSky(saved!));
-    } catch {
-      /* storage unavailable — keep the default sky */
-    }
-  }, []);
-
-  /* Keep the hero artwork in step with the shared ambient sky, even if the
-     theme is changed from another tab. */
-  useEffect(() => {
-    const onSky = (e: Event) => {
-      const id = (e as CustomEvent<string>).detail;
-      if (isValidSky(id)) setSky(id);
-    };
-    const onStorage = (e: StorageEvent) => {
-      if ((!e.key || e.key === SKY_STORAGE_KEY) && isValidSky(e.newValue)) setSky(e.newValue);
-    };
-    window.addEventListener(SKY_EVENT, onSky);
-    window.addEventListener("storage", onStorage);
-    return () => {
-      window.removeEventListener(SKY_EVENT, onSky);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, []);
 
   useEffect(() => {
     const el = statsRef.current;
@@ -106,67 +74,38 @@ export function LifeContent({
   };
 
   return (
-    <main id="main" className="life-page" data-sky={sky}>
+    <main id="main" className="section life-page">
       <section className="about-hero life-hero" aria-label="Daily life">
-        <div className="about-hero-bg">
-          <Image
-            key={`${sky}-desktop`}
-            src={`/images/real-${sky}-desktop.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="about-hero-img about-hero-img-desktop object-cover"
-          />
-          <Image
-            key={`${sky}-mobile`}
-            src={`/images/real-${sky}-mobile.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="about-hero-img about-hero-img-mobile object-cover"
-          />
+        <p className="work-head-kicker">Life</p>
+        <h1 className="about-name life-name" aria-label={TITLE}>
+          {TITLE.split("").map((ch, i) => (
+            <span
+              key={i}
+              aria-hidden="true"
+              className="char-in"
+              style={{ animationDelay: `${90 + i * 45}ms`, whiteSpace: "pre" }}
+            >
+              {ch}
+            </span>
+          ))}
+        </h1>
+        <div className="about-signature-row">
+          <span className="about-signature">moments</span>
+          <span className="about-signature-handle">— @{site.handle}</span>
         </div>
-        <div className="about-hero-stars" aria-hidden="true">
-          <Stars density={0.035} color="#fff6e6" shooting shootingColor="#fff1cd" />
+        <p className="about-lead">
+          Moments Ahmad posts himself. Tap an emoji to react, or add an animated one of your own.
+        </p>
+        <div className="about-actions">
+          {isAdmin && (
+            <button type="button" onClick={openComposer} className="about-cta">
+              <Camera size={15} /> New moment <ArrowUpRight size={14} />
+            </button>
+          )}
+          <Link href="/work" className="about-work-link">
+            See the work <ArrowRight size={15} />
+          </Link>
         </div>
-        <span className="about-hero-side" aria-hidden="true">{site.name}</span>
-
-        <div className="about-hero-inner life-hero-inner">
-          <h1 className="about-name life-name" aria-label={TITLE}>
-            {TITLE.split("").map((ch, i) => (
-              <span
-                key={i}
-                aria-hidden="true"
-                className="about-name-char"
-                style={{ animationDelay: `${90 + i * 45}ms`, whiteSpace: "pre" }}
-              >
-                {ch}
-              </span>
-            ))}
-          </h1>
-          <div className="about-signature-row">
-            <span className="about-signature">moments</span>
-            <span className="about-signature-handle">— @{site.handle}</span>
-          </div>
-          <p className="about-lead">
-            Moments Ahmad posts himself. Tap an emoji to react, or add an animated one of your own.
-          </p>
-          <div className="about-actions">
-            {isAdmin && (
-              <button type="button" onClick={openComposer} className="about-cta">
-                <Camera size={15} /> New moment <ArrowUpRight size={14} />
-              </button>
-            )}
-            <Link href="/work" className="about-work-link">
-              See the work <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-        <div className="about-hero-fade" aria-hidden="true" />
       </section>
 
       <div className="life-inner">
