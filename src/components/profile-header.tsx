@@ -36,7 +36,7 @@ export function ProfileHeader() {
             </Link>
             <div className="profile-actions">
               <a href={`mailto:${site.email}`} className="profile-button">
-                <Mail size={15} /> <span className="hidden sm:inline">Say hello</span><span className="sm:hidden">Hello</span>
+                <Mail size={15} /> Say hello
               </a>
               <a href={site.socials[0].href} target="_blank" rel="noopener noreferrer" className="profile-button profile-button-primary">
                 <GithubIcon width={15} height={15} /> Follow
@@ -52,8 +52,8 @@ export function ProfileHeader() {
           <li><Globe size={13} /><a href={site.url} className="hover:text-fg">{site.domain}</a></li>
         </ul>
         <dl className="profile-stats">
-          <div><dd>{String(projects.length).padStart(2, "0")}</dd><dt>projects</dt></div>
-          <div><dd>{String(site.skills.length).padStart(2, "0")}</dd><dt>skills</dt></div>
+          <div><dt>projects</dt>{" "}<dd>{String(projects.length).padStart(2, "0")}</dd></div>
+          <div><dt>skills</dt>{" "}<dd>{String(site.skills.length).padStart(2, "0")}</dd></div>
         </dl>
       </div>
     </section>

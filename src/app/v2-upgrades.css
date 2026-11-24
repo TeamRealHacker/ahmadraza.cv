@@ -1,0 +1,80 @@
+/*
+ * Portfolio v2 upgrades — loaded after globals.css (see layout.tsx).
+ *
+ * Contains the v2 additions only, so globals.css stays untouched:
+ *  - full-bleed <picture> backgrounds for the hero / about / life banners
+ *    (the old .hero-img-mobile / .about-hero-img-desktop / -mobile rules in
+ *    globals.css match no element any more and are inert)
+ *  - profile stats: the DOM order is now valid (dt before dd); the value
+ *    still renders first visually via flex order
+ *  - desktop inline navigation inside the MenuNotch pill (mobile keeps the
+ *    burger + expanding panel)
+ */
+
+/* ---- <picture> banner backgrounds ------------------------------------ */
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.about-hero-img { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ---- Profile stats: valid dt-first markup, value-first rendering ------ */
+dl.profile-stats dt { order: 2; }
+
+/* ---- Desktop inline navigation in the notch pill ---------------------- */
+.notch-burger { display: flex; }
+.notch-inline { display: none; }
+@media (min-width: 640px) {
+  .notch-burger { display: none; }
+  .notch-inline { display: flex; }
+}
+.notch-mark {
+  font-family: var(--font-pixelify);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--bg);
+  text-decoration: none;
+  transition: opacity .3s var(--ease);
+}
+.notch-mark:hover { opacity: .7; }
+.notch-nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: .01em;
+  color: color-mix(in srgb, var(--bg) 70%, transparent);
+  text-decoration: none;
+  transition: color .3s var(--ease), background-color .3s var(--ease);
+}
+.notch-nav-link:hover { color: var(--bg); background: color-mix(in srgb, var(--bg) 10%, transparent); }
+.notch-nav-link.is-active { color: var(--bg); background: color-mix(in srgb, var(--bg) 14%, transparent); }
+.notch-nav-link.is-active::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 5px;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--bg);
+  transform: translateX(-50%);
+}
+.notch-hello {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  margin-left: 8px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--bg) 28%, transparent);
+  font-size: 12.5px;
+  font-weight: 550;
+  color: var(--bg);
+  text-decoration: none;
+  transition: background-color .3s var(--ease);
+}
+.notch-hello:hover { background: color-mix(in srgb, var(--bg) 12%, transparent); }

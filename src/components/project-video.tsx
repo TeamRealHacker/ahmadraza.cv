@@ -45,9 +45,11 @@ type AutoVideoProps = {
  * playback because React does not always emit the `muted` attribute in SSR HTML.
  *
  * Lazy by design: no video bytes are fetched until the player is near the
- * viewport (IntersectionObserver, 400px margin). Until then the poster shows
- * with a small loading indicator, so offscreen recordings (the tour, every
- * project below the fold) cost nothing on first paint.
+ * viewport (IntersectionObserver, 400px margin). Once mounted it also PAUSES
+ * when scrolled away, so offscreen recordings stop decoding instead of
+ * looping forever in the background. Reduced-motion users and failed loads
+ * fall back to the static poster — the "Loading recording…" hint only ever
+ * appears while bytes are genuinely being fetched, so it can never get stuck.
  */
 export function AutoVideo({
   video,
@@ -60,27 +62,54 @@ export function AutoVideo({
 }: AutoVideoProps) {
   const targetRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [inView, setInView] = useState(false);
+  const [started, setStarted] = useState(false);
   const [canPlay, setCanPlay] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [reduced, setReduced] = useState(false);
 
+  /* Reduced-motion users get the static poster — no autoplaying video at all. */
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
+
+  /* One observer for the whole lifecycle. It re-runs when `started` swaps the
+     observed element from the placeholder <img> to the real <video>, so
+     leaving the viewport reliably pauses the player. */
   useEffect(() => {
     const el = targetRef.current;
-    if (!el) { setInView(true); return; }
-    if (typeof IntersectionObserver === "undefined") { setInView(true); return; }
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setStarted(true);
+      return;
+    }
+    const kick = () => {
+      const v = videoRef.current;
+      if (!v) return;
+      // Some browsers ignore the SSR `muted` attribute; set the property too.
+      v.muted = true;
+      const promise = v.play();
+      if (promise && typeof promise.catch === "function") promise.catch(() => {});
+    };
     const io = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setInView(true); io.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true);
+          kick();
+        } else {
+          videoRef.current?.pause();
+        }
+      },
       { rootMargin: "400px" },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [started]);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!started) return;
     const v = videoRef.current;
     if (!v) return;
     const kick = () => {
-      // Some browsers ignore the SSR `muted` attribute; set the property too.
       v.muted = true;
       const promise = v.play();
       if (promise && typeof promise.catch === "function") promise.catch(() => {});
@@ -95,7 +124,7 @@ export function AutoVideo({
       v.removeEventListener("canplay", kick);
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [video.src, inView]);
+  }, [video.src, started]);
 
   const expand = onExpand ? (
     <button type="button" className="ar-video-expand" onClick={onExpand} aria-label={`Open ${video.title} full screen`} title="Full screen">
@@ -103,10 +132,13 @@ export function AutoVideo({
     </button>
   ) : null;
 
-  if (!inView) {
+  /* Poster-only states: before the player reaches the viewport, for
+     reduced-motion users, or when the recording failed to load. No loading
+     badge here — nothing is loading, and crawlers/no-JS visitors should not
+     see a wall of "Loading recording…" strings. */
+  if (!started || reduced || failed) {
     return (
       <>
-        {/* eslint-disable-next-line jsx-a11y/alt-text */}
         <img
           ref={(el) => { targetRef.current = el; }}
           src={video.poster}
@@ -115,7 +147,6 @@ export function AutoVideo({
           className={className}
           loading="lazy"
         />
-        <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>
         {showRec && <span className="ar-video-rec" aria-hidden="true"><i /> REC</span>}
         {children}
         {expand}
@@ -139,6 +170,7 @@ export function AutoVideo({
         disablePictureInPicture
         onCanPlay={() => setCanPlay(true)}
         onLoadedData={() => setCanPlay(true)}
+        onError={() => setFailed(true)}
         aria-label={`${video.title} — recorded preview, playing automatically`}
       />
       {!canPlay && <span className="ar-video-loading" aria-hidden="true">Loading recording…</span>}

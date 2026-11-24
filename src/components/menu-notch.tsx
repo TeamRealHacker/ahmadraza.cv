@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { Moon, Sun } from "lucide-react";
+import { ArrowUpRight, Moon, Sun } from "lucide-react";
 import { toggleTheme } from "@/lib/theme";
 import { SocialIcon } from "./icons";
 import { site } from "@/data/site";
@@ -37,6 +37,14 @@ const SECTIONS: NotchSection[] = [
     size: "sm",
     links: [{ label: "Contact", href: `mailto:${site.email}`, match: "" }],
   },
+];
+
+/** Visible inline links on desktop — no "open Menu first" detour. */
+const NAV_LINKS: NotchLink[] = [
+  { label: "Work", href: "/work", match: "/work" },
+  { label: "Life", href: "/life", match: "/life" },
+  { label: "About", href: "/about", match: "/about" },
+  { label: "Experience", href: "/experience", match: "/experience" },
 ];
 
 const LETTER_STAGGER = 0.05;
@@ -197,9 +205,9 @@ export function MenuNotch() {
     <nav
       ref={rootRef}
       aria-label="Main"
-      className="menu-notch pointer-events-auto relative w-[min(414px,calc(100vw-24px))]"
+      className="menu-notch pointer-events-auto relative w-[min(414px,calc(100vw-24px))] sm:w-auto"
     >
-      <div className="absolute inset-x-0 top-0 z-50 rounded-[30px] border border-line bg-card p-2 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.6)]">
+      <div className="absolute inset-x-0 top-0 z-50 rounded-[30px] border border-line bg-card p-2 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.6)] sm:static">
         <div className="flex h-[60px] items-center justify-between rounded-[21px] bg-fg pl-6 pr-[9px] text-bg">
           <button
             type="button"
@@ -207,11 +215,45 @@ export function MenuNotch() {
             aria-controls={contentId}
             aria-label={label}
             onClick={toggle}
-            className="-ml-6 flex cursor-pointer items-center gap-[6.75px] self-stretch rounded-[21px] pr-3 pl-6 text-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="notch-burger -ml-6 flex cursor-pointer items-center gap-[6.75px] self-stretch rounded-[21px] pr-3 pl-6 text-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Burger open={open} reduced={reduced} />
             <Letters key={label} text={label} animate={toggled && !reduced} />
           </button>
+
+          {/* Desktop: navigation is visible in the pill itself — a monogram
+              for Home, the four section links, and a compact Say-hello CTA. */}
+          <div className="notch-inline items-center">
+            <Link
+              href="/"
+              aria-label={`${site.name} — home`}
+              onClick={() => setOpen(false)}
+              className="notch-mark mr-3"
+            >
+              AR.
+            </Link>
+            <ul className="flex items-center">
+              {NAV_LINKS.map((link) => {
+                const active = isActive(link);
+                return (
+                  <li key={link.href} className="flex">
+                    <Link
+                      href={link.href}
+                      aria-current={active ? "page" : undefined}
+                      onClick={() => setOpen(false)}
+                      className={cx("notch-nav-link cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring", active && "is-active")}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            <a href={`mailto:${site.email}`} className="notch-hello">
+              Say hello <ArrowUpRight size={12} aria-hidden="true" />
+            </a>
+          </div>
+
           <button
             type="button"
             aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}

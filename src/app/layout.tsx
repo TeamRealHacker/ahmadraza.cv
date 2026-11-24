@@ -7,6 +7,7 @@ import { MenuNotch } from "@/components/menu-notch";
 import { themeInitScript } from "@/lib/theme";
 import { site } from "@/data/site";
 import "./globals.css";
+import "./v2-upgrades.css";
 
 const pixel = localFont({
   src: "../fonts/pixelify.woff2",

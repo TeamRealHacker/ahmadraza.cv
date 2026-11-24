@@ -9,7 +9,7 @@ import { site } from "@/data/site";
 import { SKIES, type SkyId } from "@/data/skies";
 import { SKY_EVENT, getSkyTheme, setSkyTheme } from "@/lib/sky";
 
-const HEADING = "I Work For Real !!";
+const HEADING = "I build for real.";
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,27 +38,21 @@ export function Hero() {
     <section aria-label="Introduction" className="px-3 pt-3 sm:px-5" ref={ref}>
       <div className="hero-shell relative mx-auto max-w-5xl overflow-hidden">
         <m.div style={{ y, scale }} className="absolute inset-0">
-          <Image
-            key={`${sky}-desktop`}
-            src={`/images/real-${sky}-desktop.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="(min-width: 641px) 1024px, 100vw"
-            style={{ objectPosition: active.focus }}
-            className="hero-img hero-img-desktop object-cover"
-          />
-          <Image
-            key={`${sky}-mobile`}
-            src={`/images/real-${sky}-mobile.webp`}
-            alt=""
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            className="hero-img hero-img-mobile object-cover"
-          />
+          {/* Art-directed hero background: <picture> downloads ONLY the matching
+              source, unlike the previous two eager next/image fills that always
+              pulled both the 1600×560 desktop and 800×800 phone artwork. */}
+          <picture key={sky}>
+            <source media="(max-width: 640px)" srcSet={`/images/real-${sky}-mobile.webp`} />
+
+            <img
+              src={`/images/real-${sky}-desktop.webp`}
+              alt=""
+              className="hero-img object-cover"
+              fetchPriority="high"
+              decoding="async"
+              style={{ objectPosition: active.focus }}
+            />
+          </picture>
         </m.div>
 
         <div className="hero-wash" aria-hidden="true" />
